@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/nicepunn/pantip-re/compare/v1.0.0...v1.1.0) (2024-05-20)
+
+
+### Features
+
+* build ([6614daa](https://github.com/nicepunn/pantip-re/commit/6614daab67ea32a59144b33d13f5da3dc344b0b0))
+
 # 1.0.0 (2024-05-20)
 
 
