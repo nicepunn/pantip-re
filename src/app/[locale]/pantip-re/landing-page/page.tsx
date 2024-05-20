@@ -716,13 +716,13 @@ export default function BlogPage() {
     );
   };
 
-  const [meta, setMeta] = useState<Meta | undefined>();
-  const [data, setData] = useState<any>([]);
+  // const [meta, setMeta] = useState<Meta | undefined>();
+  // const [data, setData] = useState<any>([]);
   const [isLoading, setLoading] = useState(true);
   const fetchData = useCallback(
     async (
-      start: number,
-      limit: number,
+      // start: number,
+      // limit: number,
       _searchString: string,
       _selectedTag: string,
     ) => {
@@ -773,22 +773,22 @@ export default function BlogPage() {
   );
 
   function loadMorePosts(): void {
-    const nextPosts = meta!.pagination.start + meta!.pagination.limit;
-    fetchData(
-      nextPosts,
-      Number(process.env.NEXT_PUBLIC_PAGE_LIMIT),
-      // getUrlParamsValue("search"),
-      // getUrlParamsValue("filter")
-      searchString,
-      selectedTag,
-    );
+    // const nextPosts = meta!.pagination.start + meta!.pagination.limit;
+    // fetchData(
+    //   nextPosts,
+    //   Number(process.env.NEXT_PUBLIC_PAGE_LIMIT),
+    //   // getUrlParamsValue("search"),
+    //   // getUrlParamsValue("filter")
+    //   searchString,
+    //   selectedTag,
+    // );
   }
 
   useEffect(() => {
     router.push(createPageURL(searchString, selectedTag));
     fetchData(
-      0,
-      Number(process.env.NEXT_PUBLIC_PAGE_LIMIT),
+      // 0,
+      // Number(process.env.NEXT_PUBLIC_PAGE_LIMIT),
       // getUrlParamsValue("search"),
       // getUrlParamsValue("filter")
       searchString,
