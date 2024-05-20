@@ -654,16 +654,17 @@ export default function BlogPage() {
 
   const searchParams = useSearchParams();
   const pathname = usePathname();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const createPageURL = (_searchString: string, filterTag: string) => {
     const params = new URLSearchParams(searchParams);
     params.set('search', _searchString);
     params.set('filter', filterTag);
     return `${pathname}?${params.toString()}`;
   };
-  const getUrlParamsValue = (key: string) => {
-    const params = new URLSearchParams(searchParams);
-    return params.get(key) ?? '';
-  };
+  // const getUrlParamsValue = (key: string) => {
+  //   const params = new URLSearchParams(searchParams);
+  //   return params.get(key) ?? '';
+  // };
 
   const methods = useForm({
     resolver: zodResolver(
@@ -718,7 +719,6 @@ export default function BlogPage() {
   const [meta, setMeta] = useState<Meta | undefined>();
   const [data, setData] = useState<any>([]);
   const [isLoading, setLoading] = useState(true);
-
   const fetchData = useCallback(
     async (
       start: number,
@@ -728,43 +728,42 @@ export default function BlogPage() {
     ) => {
       setLoading(true);
       try {
-        const token = process.env.NEXT_PUBLIC_STRAPI_API_TOKEN;
-        const path = `/articles`;
-        const filters = _selectedTag
-          ? {
-              title: { $containsi: _searchString },
-              tags: { name: { $eq: _selectedTag } },
-            }
-          : {
-              title: { $containsi: _searchString },
-            };
-        const urlParamsObject = {
-          sort: { createdAt: 'desc' },
-          populate: {
-            cover: { fields: ['url'] },
-            category: { populate: '*' },
-            authorsBio: {
-              populate: '*',
-            },
-            tags: { fields: ['name'] },
-          },
-          pagination: {
-            start,
-            limit,
-          },
-          filters,
-        };
-        const options = { headers: { Authorization: `Bearer ${token}` } };
-        const responseData = await fetchAPI(path, urlParamsObject, options);
-
-        if (start === 0) {
-          setData(responseData.data);
-        } else {
-          setData((prevData: any[]) => [...prevData, ...responseData.data]);
-        }
-
-        setMeta(responseData.meta);
+        // const token = process.env.API_TOKEN; // add TOKEN
+        // const path = `/articles`;
+        // const filters = _selectedTag
+        //   ? {
+        //       title: { $containsi: _searchString },
+        //       tags: { name: { $eq: _selectedTag } },
+        //     }
+        //   : {
+        //       title: { $containsi: _searchString },
+        //     };
+        // const urlParamsObject = {
+        //   sort: { createdAt: 'desc' },
+        //   populate: {
+        //     cover: { fields: ['url'] },
+        //     category: { populate: '*' },
+        //     authorsBio: {
+        //       populate: '*',
+        //     },
+        //     tags: { fields: ['name'] },
+        //   },
+        //   pagination: {
+        //     start,
+        //     limit,
+        //   },
+        //   filters,
+        // };
+        // const options = { headers: { Authorization: `Bearer ${token}` } };
+        // const responseData = await fetchAPI(path, urlParamsObject, options);
+        // if (start === 0) {
+        //   setData(responseData.data);
+        // } else {
+        //   setData((prevData: any[]) => [...prevData, ...responseData.data]);
+        // }
+        // setMeta(responseData.meta);
       } catch (error) {
+        // eslint-disable-next-line no-console
         console.error(error);
       } finally {
         setLoading(false);
