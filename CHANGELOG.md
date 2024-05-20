@@ -1,3 +1,10 @@
+# 1.0.0 (2024-05-20)
+
+
+### Features
+
+* a lot ([cf56fb8](https://github.com/nicepunn/pantip-re/commit/cf56fb80da4c940f7b55cea9bf1f58bf30d5e968))
+
 # [3.50.0](https://github.com/ixartz/Next-js-Boilerplate/compare/v3.49.0...v3.50.0) (2024-05-18)
 
 
