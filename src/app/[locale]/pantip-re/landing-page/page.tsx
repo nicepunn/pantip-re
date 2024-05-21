@@ -1,3 +1,143 @@
+// import { zodResolver } from '@hookform/resolvers/zod';
+// import { Loader } from '@storybook/react';
+// import router from 'next/dist/shared/lib/router/router';
+// import { usePathname, useSearchParams } from 'next/navigation';
+// import { useCallback, useEffect } from 'react';
+// import { useForm } from 'react-hook-form';
+// import { z } from 'zod';
+
+// import Ground from './_component/Ground';
+// import { FetchLandingPage } from './api/routers/posts';
+
+// export default function LandingPage() {
+//   // async function fetch() {
+//   //   const data = await FetchLandingPage();
+//   //   console.log(data);
+//   //   return data;
+//   // }
+
+//   const searchParams = useSearchParams();
+//   const pathname = usePathname();
+//   // eslint-disable-next-line react-hooks/exhaustive-deps
+//   const createPageURL = (_searchString: string, filterTag: string) => {
+//     const params = new URLSearchParams(searchParams);
+//     params.set('search', _searchString);
+//     params.set('filter', filterTag);
+//     return `${pathname}?${params.toString()}`;
+//   };
+//   // const getUrlParamsValue = (key: string) => {
+//   //   const params = new URLSearchParams(searchParams);
+//   //   return params.get(key) ?? '';
+//   // };
+
+//   const methods = useForm({
+//     resolver: zodResolver(
+//       z.object({
+//         searchQuery: z.string(),
+//       }),
+//     ),
+//     defaultValues: {
+//       searchQuery: '',
+//     },
+//   });
+//   const { handleSubmit, setValue } = methods;
+//   const formSubmit = (searchQuery: { searchQuery: string }) => {
+//     setSearchString(searchQuery.searchQuery);
+//   };
+
+//   const [isLoading, setLoading] = useState(true);
+//   const fetchData = useCallback(
+//     async (
+//       start: number,
+//       limit: number,
+//       _searchString: string,
+//       _selectedTag: string,
+//     ) => {
+//       setLoading(true);
+//       try {
+//         const token = process.env.API_TOKEN; // add TOKEN
+//         const path = `/articles`;
+//         const filters = _selectedTag
+//           ? {
+//               title: { $containsi: _searchString },
+//               tags: { name: { $eq: _selectedTag } },
+//             }
+//           : {
+//               title: { $containsi: _searchString },
+//             };
+//         const urlParamsObject = {
+//           sort: { createdAt: 'desc' },
+//           populate: {
+//             cover: { fields: ['url'] },
+//             category: { populate: '*' },
+//             authorsBio: {
+//               populate: '*',
+//             },
+//             tags: { fields: ['name'] },
+//           },
+//           pagination: {
+//             start,
+//             limit,
+//           },
+//           filters,
+//         };
+//         const options = { headers: { Authorization: `Bearer ${token}` } };
+//         const responseData = await FetchLandingPage();
+//         console.log(responseData);
+//         if (start === 0) {
+//           setData(responseData);
+//         } else {
+//           setData((prevData: any[]) => [...prevData, ...responseData]);
+//         }
+//         setMeta(responseData.meta);
+//       } catch (error) {
+//         // eslint-disable-next-line no-console
+//         console.error(error);
+//       } finally {
+//         setLoading(false);
+//       }
+//       console.log(' ');
+//     },
+//     [],
+//   );
+
+//   function loadMorePosts(): void {
+//     // const nextPosts = meta!.pagination.start + meta!.pagination.limit;
+//     // fetchData(
+//     //   nextPosts,
+//     //   Number(process.env.NEXT_PUBLIC_PAGE_LIMIT),
+//     //   // getUrlParamsValue("search"),
+//     //   // getUrlParamsValue("filter")
+//     //   searchString,
+//     //   selectedTag,
+//     // );
+//   }
+
+//   useEffect(() => {
+//     router.push(createPageURL(searchString, selectedTag));
+//     fetchData(
+//       0,
+//       12,
+//       // getUrlParamsValue("search"),
+//       // getUrlParamsValue("filter")
+//       searchString,
+//       selectedTag,
+//     );
+//   }, [searchString, selectedTag]);
+
+//   if (isLoading) return <Loader />;
+
+//   // const mockMeta: Meta = {
+//   //   pagination: {
+//   //     start: 0,
+//   //     limit: 6,
+//   //     total: 12,
+//   //   },
+//   // };
+
+//   return <Ground />;
+// }
+
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -12,613 +152,54 @@ import { z } from 'zod';
 import profile from '../assets/profile.jpg';
 import { Form } from '../component/Form';
 import TopicCard from '../component/TopicCard';
-import type { TopicProps } from '../interface';
+import type { AllPosts, Meta, Post } from '../interface';
 
-const mockTopics: TopicProps[] = [
+const mockPosts: Post[] = [
   {
-    id: 1,
-    attributes: {
-      title: 'Understanding TypeScript',
-      description:
-        'A comprehensive guide to TypeScript, covering all the basics and advanced concepts.',
-      slug: 'understanding-typescript',
-      createdAt: '2023-01-15T08:30:00Z',
-      updatedAt: '2023-03-10T12:45:00Z',
-      publishedAt: '2023-02-01T10:00:00Z',
-      rating: 4.8,
-      cover: {
-        data: {
-          attributes: {
-            url: 'https://images.squarespace-cdn.com/content/v1/5e10bdc20efb8f0d169f85f9/09943d85-b8c7-4d64-af31-1a27d1b76698/arrow.png',
-          },
-        },
-      },
-      tags: {
-        data: [
-          { id: 1, attributes: { name: 'JavaScript' } },
-          { id: 2, attributes: { name: 'Programming' } },
-        ],
-      },
-      category: {
-        data: {
-          attributes: {
-            name: 'Technology',
-            slug: 'technology',
-          },
-        },
-      },
-      authorsBio: {
-        data: {
-          attributes: {
-            name: 'John Doe',
-            avatar: {
-              data: {
-                attributes: {
-                  url: profile,
-                },
-              },
-            },
-          },
-        },
-      },
-      comments: [
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-      ],
-    },
+    creator: 'John Doe',
+    title: 'Lorem Ipsum Dolor Sit Amet',
+    link: 'https://example.com/post1',
+    pubDate: '2024-05-20T08:00:00Z',
+    content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+    contentSnippet: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+    categories: ['Tech', 'Programming'],
+    isoDate: '2024-05-20T08:00:00Z',
+    coverImg:
+      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQfZ5Cl3V0oy7WXC5D4q-DbnJQYTo35hHu9qRosauNr5g&s',
+    authorImg: profile,
+    commentCount: 10,
   },
   {
-    id: 2,
-    attributes: {
-      title: 'Mastering React',
-      description:
-        'An in-depth look at React.js, from fundamentals to advanced techniques.',
-      slug: 'mastering-react',
-      createdAt: '2023-02-20T09:15:00Z',
-      updatedAt: '2023-04-05T11:30:00Z',
-      publishedAt: '2023-03-01T14:00:00Z',
-      rating: 4.9,
-      cover: {
-        data: {
-          attributes: {
-            url: 'https://ioflood.com/blog/wp-content/uploads/2023/10/java_logo_dice_random.jpg',
-          },
-        },
-      },
-      tags: {
-        data: [
-          { id: 3, attributes: { name: 'React' } },
-          { id: 4, attributes: { name: 'Frontend' } },
-        ],
-      },
-      category: {
-        data: {
-          attributes: {
-            name: 'Web Development',
-            slug: 'web-development',
-          },
-        },
-      },
-      authorsBio: {
-        data: {
-          attributes: {
-            name: 'Punnawat Lohanuit',
-            avatar: {
-              data: {
-                attributes: {
-                  url: profile,
-                },
-              },
-            },
-          },
-        },
-      },
-      comments: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    },
+    creator: 'Jane Smith',
+    title: 'Nulla Facilisi',
+    link: 'https://example.com/post2',
+    pubDate: '2024-05-19T08:00:00Z',
+    content: 'Nulla facilisi. Sed ut ligula eget nisi vehicula sodales.',
+    contentSnippet: 'Nulla facilisi. Sed ut ligula eget nisi vehicula sodales.',
+    categories: ['Science', 'Research'],
+    isoDate: '2024-05-19T08:00:00Z',
+    coverImg: null,
+    authorImg: profile,
+    commentCount: 4,
   },
+  // Repeat similar structures for other posts
   {
-    id: 3,
-    attributes: {
-      title: 'Advanced CSS Techniques',
-      description:
-        'Explore advanced CSS techniques to enhance your web designs and improve user experience.',
-      slug: 'advanced-css-techniques',
-      createdAt: '2023-03-10T10:00:00Z',
-      updatedAt: '2023-04-20T09:30:00Z',
-      publishedAt: '2023-04-01T08:00:00Z',
-      rating: 4.7,
-      cover: {
-        data: {
-          attributes: {
-            url: 'https://amymhaddad.s3.amazonaws.com/oriental-tiles.png',
-          },
-        },
-      },
-      tags: {
-        data: [
-          { id: 5, attributes: { name: 'CSS' } },
-          { id: 6, attributes: { name: 'Design' } },
-        ],
-      },
-      category: {
-        data: {
-          attributes: {
-            name: 'Design',
-            slug: 'design',
-          },
-        },
-      },
-      authorsBio: {
-        data: {
-          attributes: {
-            name: 'Long name long name',
-            avatar: {
-              data: {
-                attributes: {
-                  url: null,
-                },
-              },
-            },
-          },
-        },
-      },
-      comments: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    },
-  },
-  {
-    id: 4,
-    attributes: {
-      title: 'Node.js for Beginners',
-      description:
-        'Learn the basics of Node.js and build your first server-side application.',
-      slug: 'nodejs-for-beginners',
-      createdAt: '2023-01-25T12:00:00Z',
-      updatedAt: '2023-02-20T15:00:00Z',
-      publishedAt: '2023-02-10T09:00:00Z',
-      rating: 4.6,
-      cover: {
-        data: {
-          attributes: {
-            url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTM-Ppex-jwsVIyF9Qjn2TrG8J9bw7AFZNco_DsZOI9kQ&s',
-          },
-        },
-      },
-      tags: {
-        data: [
-          { id: 7, attributes: { name: 'Node.js' } },
-          { id: 8, attributes: { name: 'Backend' } },
-        ],
-      },
-      category: {
-        data: {
-          attributes: {
-            name: 'Web Development',
-            slug: 'web-development',
-          },
-        },
-      },
-      authorsBio: {
-        data: {
-          attributes: {
-            name: 'Michael Brown',
-            avatar: {
-              data: {
-                attributes: {
-                  url: null,
-                },
-              },
-            },
-          },
-        },
-      },
-      comments: [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    },
-  },
-  {
-    id: 5,
-    attributes: {
-      title: 'Python Data Science',
-      description:
-        'A complete guide to using Python for data science, including libraries like Pandas and NumPy.',
-      slug: 'python-data-science',
-      createdAt: '2023-04-01T11:00:00Z',
-      updatedAt: '2023-05-10T10:00:00Z',
-      publishedAt: '2023-04-20T12:00:00Z',
-      rating: 4.9,
-      cover: {
-        data: {
-          attributes: {
-            url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTBcfCcADMkNcfpcVSxijnG4vtCiJFKsjZuGRAcbDaSOA&s',
-          },
-        },
-      },
-      tags: {
-        data: [
-          { id: 9, attributes: { name: 'Python' } },
-          { id: 10, attributes: { name: 'Data Science' } },
-        ],
-      },
-      category: {
-        data: {
-          attributes: {
-            name: 'Data Science',
-            slug: 'data-science',
-          },
-        },
-      },
-      authorsBio: {
-        data: {
-          attributes: {
-            name: 'Sarah Connor',
-            avatar: {
-              data: {
-                attributes: {
-                  url: profile,
-                },
-              },
-            },
-          },
-        },
-      },
-      comments: [
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-      ],
-    },
-  },
-  {
-    id: 6,
-    attributes: {
-      title: 'Machine Learning with TensorFlow in Python',
-      description:
-        'Master machine learning concepts and build models using TensorFlow.',
-      slug: 'machine-learning-tensorflow',
-      createdAt: '2023-03-15T14:00:00Z',
-      updatedAt: '2023-05-01T16:00:00Z',
-      publishedAt: '2023-04-10T10:00:00Z',
-      rating: 4.8,
-      cover: {
-        data: {
-          attributes: {
-            url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQDfULWGB9KTz9NgLFJDj4PGsMCNm8ErSmZjOBZF61-5A&s',
-          },
-        },
-      },
-      tags: {
-        data: [
-          { id: 11, attributes: { name: 'Machine Learning' } },
-          { id: 12, attributes: { name: 'TensorFlow' } },
-          { id: 99999, attributes: { name: 'Irtificial Intelligence' } },
-          { id: 999999, attributes: { name: 'Deep Learning' } },
-        ],
-      },
-      category: {
-        data: {
-          attributes: {
-            name: 'Artificial Intelligence',
-            slug: 'artificial-intelligence',
-          },
-        },
-      },
-      authorsBio: {
-        data: {
-          attributes: {
-            name: 'Tom Wilson',
-            avatar: {
-              data: {
-                attributes: {
-                  url: null,
-                },
-              },
-            },
-          },
-        },
-      },
-      comments: [],
-    },
-  },
-  {
-    id: 7,
-    attributes: {
-      title: 'Docker for DevOps',
-      description:
-        'Learn how to use Docker for developing, shipping, and running applications.',
-      slug: 'docker-for-devops',
-      createdAt: '2023-02-05T08:00:00Z',
-      updatedAt: '2023-03-10T11:00:00Z',
-      publishedAt: '2023-02-25T12:00:00Z',
-      rating: 4.7,
-      cover: {
-        data: {
-          attributes: {
-            url: 'https://media.istockphoto.com/id/1356364287/photo/close-up-focus-on-persons-hands-typing-on-the-desktop-computer-backlit-keyboard-screens-show.jpg?s=612x612&w=0&k=20&c=ijjq-DLNxIaPuGvIX8k06IZxMAjGpyJeboaV_byCX9k=',
-          },
-        },
-      },
-      tags: {
-        data: [
-          { id: 13, attributes: { name: 'Docker' } },
-          { id: 14, attributes: { name: 'DevOps' } },
-        ],
-      },
-      category: {
-        data: {
-          attributes: {
-            name: 'DevOps',
-            slug: 'devops',
-          },
-        },
-      },
-      authorsBio: {
-        data: {
-          attributes: {
-            name: 'Lisa White',
-            avatar: {
-              data: {
-                attributes: {
-                  url: null,
-                },
-              },
-            },
-          },
-        },
-      },
-      comments: [0, 0, 0, 0],
-    },
-  },
-  {
-    id: 8,
-    attributes: {
-      title: 'Kubernetes for Beginners',
-      description:
-        'Get started with Kubernetes and learn how to manage containerized applications.',
-      slug: 'kubernetes-for-beginners',
-      createdAt: '2023-01-10T09:30:00Z',
-      updatedAt: '2023-02-15T13:00:00Z',
-      publishedAt: '2023-01-25T11:00:00Z',
-      rating: 4.5,
-      cover: {
-        data: {
-          attributes: {
-            url: 'https://www.amd.com/content/dam/amd/en/images/abstract/648568-developer-code.jpg',
-          },
-        },
-      },
-      tags: {
-        data: [
-          { id: 15, attributes: { name: 'Kubernetes' } },
-          { id: 16, attributes: { name: 'Containerization' } },
-        ],
-      },
-      category: {
-        data: {
-          attributes: {
-            name: 'Cloud Computing',
-            slug: 'cloud-computing',
-          },
-        },
-      },
-      authorsBio: {
-        data: {
-          attributes: {
-            name: 'Chris Green',
-            avatar: {
-              data: {
-                attributes: {
-                  url: null,
-                },
-              },
-            },
-          },
-        },
-      },
-      comments: [0, 0],
-    },
-  },
-  {
-    id: 9,
-    attributes: {
-      title: 'Building APIs with Express.js',
-      description:
-        'Learn how to build robust APIs using Express.js and Node.js.',
-      slug: 'building-apis-express',
-      createdAt: '2023-04-05T10:00:00Z',
-      updatedAt: '2023-05-15T14:00:00Z',
-      publishedAt: '2023-04-20T09:00:00Z',
-      rating: 4.8,
-      cover: {
-        data: {
-          attributes: {
-            url: null,
-          },
-        },
-      },
-      tags: {
-        data: [
-          { id: 17, attributes: { name: 'Express.js' } },
-          { id: 18, attributes: { name: 'API' } },
-        ],
-      },
-      category: {
-        data: {
-          attributes: {
-            name: 'Web Development',
-            slug: 'web-development',
-          },
-        },
-      },
-      authorsBio: {
-        data: {
-          attributes: {
-            name: 'Nina Brown',
-            avatar: {
-              data: {
-                attributes: {
-                  url: null,
-                },
-              },
-            },
-          },
-        },
-      },
-      comments: [0, 0, 0, 0, 0, 0, 0],
-    },
-  },
-  {
-    id: 10,
-    attributes: {
-      title: 'SQL for Data Analysis',
-      description:
-        'Master SQL and use it for effective data analysis and reporting.',
-      slug: 'sql-for-data-analysis',
-      createdAt: '2023-02-18T07:45:00Z',
-      updatedAt: '2023-03-22T08:00:00Z',
-      publishedAt: '2023-03-01T13:00:00Z',
-      rating: 4.6,
-      cover: {
-        data: {
-          attributes: {
-            url: 'https://www.simplilearn.com/ice9/free_resources_article_thumb/full_stack_banner.jpg',
-          },
-        },
-      },
-      tags: {
-        data: [
-          { id: 19, attributes: { name: 'SQL' } },
-          { id: 20, attributes: { name: 'Data Analysis' } },
-        ],
-      },
-      category: {
-        data: {
-          attributes: {
-            name: 'Data Science',
-            slug: 'data-science',
-          },
-        },
-      },
-      authorsBio: {
-        data: {
-          attributes: {
-            name: 'Emma Davis',
-            avatar: {
-              data: {
-                attributes: {
-                  url: null,
-                },
-              },
-            },
-          },
-        },
-      },
-      comments: [],
-    },
-  },
-  {
-    id: 4,
-    attributes: {
-      title: 'Data Structures and Algorithms',
-      description:
-        'Learn fundamental data structures and algorithms to solve complex problems efficiently.',
-      slug: 'data-structures-algorithms',
-      createdAt: '2023-04-05T11:00:00Z',
-      updatedAt: '2023-05-20T14:20:00Z',
-      publishedAt: '2023-05-01T09:30:00Z',
-      rating: 4.9,
-      cover: {
-        data: {
-          attributes: {
-            url: null,
-          },
-        },
-      },
-      tags: {
-        data: [
-          { id: 7, attributes: { name: 'Data Structures' } },
-          { id: 8, attributes: { name: 'Algorithms' } },
-        ],
-      },
-      category: {
-        data: {
-          attributes: {
-            name: 'Computer Science',
-            slug: 'computer-science',
-          },
-        },
-      },
-      authorsBio: {
-        data: {
-          attributes: {
-            name: 'Robert Brown',
-            avatar: {
-              data: {
-                attributes: {
-                  url: null,
-                },
-              },
-            },
-          },
-        },
-      },
-      comments: [0],
-    },
-  },
-  {
-    id: 5,
-    attributes: {
-      title: 'Machine Learning Fundamentals',
-      description:
-        'An introductory course to machine learning covering basic algorithms and techniques.',
-      slug: 'machine-learning-fundamentals',
-      createdAt: '2023-06-10T09:00:00Z',
-      updatedAt: '2023-07-20T15:45:00Z',
-      publishedAt: '2023-07-01T10:30:00Z',
-      rating: 4.5,
-      cover: {
-        data: {
-          attributes: {
-            url: null,
-          },
-        },
-      },
-      tags: {
-        data: [
-          { id: 9, attributes: { name: 'Machine Learning' } },
-          { id: 10, attributes: { name: 'Artificial Intelligence' } },
-        ],
-      },
-      category: {
-        data: {
-          attributes: {
-            name: 'Data Science',
-            slug: 'data-science',
-          },
-        },
-      },
-      authorsBio: {
-        data: {
-          attributes: {
-            name: 'Emily Clark',
-            avatar: {
-              data: {
-                attributes: {
-                  url: null,
-                },
-              },
-            },
-          },
-        },
-      },
-      comments: [0, 0, 0, 0, 0, 0, 0],
-    },
+    creator: 'Alice Johnson',
+    title: 'Vestibulum Ante Ipsum Primis',
+    link: 'https://example.com/post12',
+    pubDate: '2024-05-08T08:00:00Z',
+    content:
+      'Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae.',
+    contentSnippet:
+      'Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae.',
+    categories: ['Travel', 'Adventure'],
+    isoDate: '2024-05-08T08:00:00Z',
+    coverImg:
+      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsuaGN1PaTeRiUEc9Vb74XQYruHzIWtn1khha7gmN25Q&s',
+    authorImg: null,
+    commentCount: 23,
   },
 ];
-
-interface Meta {
-  pagination: {
-    start: number;
-    limit: number;
-    total: number;
-  };
-}
 
 function Loader() {
   return (
@@ -646,7 +227,7 @@ function Loader() {
   );
 }
 
-export default function BlogPage() {
+export default function Ground() {
   const router = useRouter();
   const [searchString, setSearchString] = useState('');
   const [selectedTag, setSelectedTag] = useState('');
@@ -665,6 +246,14 @@ export default function BlogPage() {
   //   const params = new URLSearchParams(searchParams);
   //   return params.get(key) ?? '';
   // };
+
+  // async function test() {
+  //   const responseData = await FetchLandingPage();
+  //   console.log('test');
+  //   console.log(responseData);
+  // }
+  // test();
+  // for test response data**********************************************
 
   const methods = useForm({
     resolver: zodResolver(
@@ -716,50 +305,56 @@ export default function BlogPage() {
     );
   };
 
-  // const [meta, setMeta] = useState<Meta | undefined>();
-  // const [data, setData] = useState<any>([]);
+  // eslint-disable-next-line unused-imports/no-unused-vars
+  const [meta, setMeta] = useState<Meta | undefined | null>();
+  // eslint-disable-next-line unused-imports/no-unused-vars
+  const [allPosts, setAllPosts] = useState<AllPosts>();
   const [isLoading, setLoading] = useState(true);
   const fetchData = useCallback(
     async (
-      // start: number,
-      // limit: number,
+      start: number,
+      limit: number,
       _searchString: string,
       _selectedTag: string,
     ) => {
       setLoading(true);
       try {
-        // const token = process.env.API_TOKEN; // add TOKEN
-        // const path = `/articles`;
-        // const filters = _selectedTag
-        //   ? {
-        //       title: { $containsi: _searchString },
-        //       tags: { name: { $eq: _selectedTag } },
-        //     }
-        //   : {
-        //       title: { $containsi: _searchString },
-        //     };
-        // const urlParamsObject = {
-        //   sort: { createdAt: 'desc' },
-        //   populate: {
-        //     cover: { fields: ['url'] },
-        //     category: { populate: '*' },
-        //     authorsBio: {
-        //       populate: '*',
-        //     },
-        //     tags: { fields: ['name'] },
-        //   },
-        //   pagination: {
-        //     start,
-        //     limit,
-        //   },
-        //   filters,
-        // };
-        // const options = { headers: { Authorization: `Bearer ${token}` } };
-        // const responseData = await fetchAPI(path, urlParamsObject, options);
+        const token = process.env.API_TOKEN; // add TOKEN
+        // eslint-disable-next-line unused-imports/no-unused-vars
+        const path = `/articles`;
+        const filters = _selectedTag
+          ? {
+              title: { $containsi: _searchString },
+              tags: { name: { $eq: _selectedTag } },
+            }
+          : {
+              title: { $containsi: _searchString },
+            };
+        // eslint-disable-next-line unused-imports/no-unused-vars
+        const urlParamsObject = {
+          sort: { createdAt: 'desc' },
+          populate: {
+            cover: { fields: ['url'] },
+            category: { populate: '*' },
+            authorsBio: {
+              populate: '*',
+            },
+            tags: { fields: ['name'] },
+          },
+          pagination: {
+            start,
+            limit,
+          },
+          filters,
+        };
+        // eslint-disable-next-line unused-imports/no-unused-vars
+        const options = { headers: { Authorization: `Bearer ${token}` } };
+        // const responseData = await FetchLandingPage();
+        // console.log(responseData);
         // if (start === 0) {
-        //   setData(responseData.data);
+        //   setData(responseData);
         // } else {
-        //   setData((prevData: any[]) => [...prevData, ...responseData.data]);
+        //   setData((prevData: any[]) => [...prevData, ...responseData]);
         // }
         // setMeta(responseData.meta);
       } catch (error) {
@@ -772,6 +367,7 @@ export default function BlogPage() {
     [],
   );
 
+  // eslint-disable-next-line unused-imports/no-unused-vars
   function loadMorePosts(): void {
     // const nextPosts = meta!.pagination.start + meta!.pagination.limit;
     // fetchData(
@@ -787,24 +383,25 @@ export default function BlogPage() {
   useEffect(() => {
     router.push(createPageURL(searchString, selectedTag));
     fetchData(
-      // 0,
-      // Number(process.env.NEXT_PUBLIC_PAGE_LIMIT),
+      0,
+      12,
       // getUrlParamsValue("search"),
       // getUrlParamsValue("filter")
       searchString,
       selectedTag,
     );
-  }, [createPageURL, fetchData, router, searchString, selectedTag]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchString, selectedTag]);
 
   if (isLoading) return <Loader />;
 
-  const mockMeta: Meta = {
-    pagination: {
-      start: 0,
-      limit: 6,
-      total: 12,
-    },
-  };
+  // const mockMeta: Meta = {
+  //   pagination: {
+  //     start: 0,
+  //     limit: 6,
+  //     total: 12,
+  //   },
+  // };
 
   return (
     <div className="flex size-full flex-col gap-y-6 px-2 pt-12 md:px-24">
@@ -856,14 +453,15 @@ export default function BlogPage() {
         )}
       </div>
       <TopicCard
-        data={mockTopics}
+        // data={data.posts}
+        data={mockPosts}
         selectedTag={selectedTag}
         setSelectedTag={setSelectedTag}
         setSearchString={setSearchString}
         setSearchValueShow={setSearchValueShow}
       >
-        {mockMeta!.pagination.start + mockMeta!.pagination.limit <
-          mockMeta!.pagination.total && (
+        {/* {meta!.pagination.start + meta!.pagination.limit <
+          meta!.pagination.total && (
           <div className="flex justify-center">
             <button
               type="button"
@@ -873,7 +471,7 @@ export default function BlogPage() {
               Load more posts...
             </button>
           </div>
-        )}
+        )} */}
       </TopicCard>
     </div>
   );

@@ -6,7 +6,7 @@ import Link from 'next/link';
 import React, { type Dispatch, type SetStateAction } from 'react';
 
 import anonymous from '../assets/anonymous.jpg';
-import type { TopicProps } from '../interface';
+import type { Post } from '../interface';
 
 export default function TopicCard({
   data,
@@ -16,7 +16,7 @@ export default function TopicCard({
   setSelectedTag,
   children,
 }: {
-  data: TopicProps[];
+  data: Post[];
   setSearchString: Dispatch<SetStateAction<string>>;
   setSearchValueShow: Dispatch<SetStateAction<string>>;
   selectedTag: string;
@@ -28,27 +28,17 @@ export default function TopicCard({
       <div className="flex w-full flex-wrap justify-center gap-16 gap-x-[40px] gap-y-8">
         {/* <div className="grid gap-x-[60px] gap-y-6 grid-flow-row grid-cols-[repeat(auto-fill,340px)]"> */}
         {data && data.length !== 0 ? (
-          data.map((topicProps: TopicProps) => {
-            // const imageUrl = getStrapiMedia(
-            //   topicProps.attributes.cover.data?.attributes.url,
-            // );
-            const imageUrl = topicProps.attributes.cover.data?.attributes.url;
-
-            const category = topicProps.attributes.category.data?.attributes;
-            const authorsBio =
-              topicProps.attributes.authorsBio.data?.attributes;
+          data.map((post: Post) => {
+            // const imageUrl = post.attributes.cover.data?.attributes.url;
+            const imageUrl = post.coverImg;
 
             // const avatarUrl = getStrapiMedia(
             //   authorsBio?.avatar.data.attributes.url,
             // );
-            const avatarUrl = authorsBio?.avatar.data.attributes.url;
-            const liststr = topicProps.attributes.tags.data;
+            const avatarUrl = post.authorImg;
+            const liststr = post.categories;
             return (
-              <Link
-                className="flex size-fit"
-                href={`/pantip-re/${category?.slug}/${topicProps.attributes.slug}`}
-                key={topicProps.id}
-              >
+              <Link className="flex size-fit" href={post.link} key={post.link}>
                 <div
                   style={{
                     backgroundImage: `url(${
@@ -64,7 +54,7 @@ export default function TopicCard({
                   <div className="flex h-fit w-full flex-col gap-y-1">
                     <div className="flex h-fit w-full items-center py-0.5">
                       <span className="line-clamp-2 text-left text-2xl font-semibold leading-[34px] text-white hover:underline">
-                        {topicProps.attributes.title}
+                        {post.title}
                       </span>
                     </div>
                     <div className="flex h-fit w-full flex-row items-center gap-x-4">
@@ -77,8 +67,7 @@ export default function TopicCard({
                           height={36}
                         />
                         <div className="line-clamp-1 text-left text-sm font-normal text-white">
-                          {topicProps.attributes.authorsBio?.data?.attributes
-                            .name ?? 'Anonymous'}
+                          {post.creator ?? 'Anonymous'}
                         </div>
                       </div>
                       <svg
@@ -119,8 +108,8 @@ export default function TopicCard({
                         </svg>
 
                         <div className="line-clamp-1 pb-0.5 text-sm font-normal text-white">
-                          {topicProps.attributes.comments
-                            ? topicProps.attributes.comments.length.toString()
+                          {post.commentCount
+                            ? post.commentCount.toString()
                             : '0'}
                         </div>
                       </div>
@@ -129,28 +118,28 @@ export default function TopicCard({
                   <div className="flex size-full flex-col-reverse">
                     <div className="flex h-fit w-full flex-row gap-x-2 overflow-x-auto">
                       {liststr && liststr.length !== 0 ? (
-                        liststr.map((item: any, _index) => {
+                        liststr.map((item: string, _index) => {
                           return (
                             <button
                               type="button"
                               // eslint-disable-next-line react/no-array-index-key
                               key={_index}
                               className={`flex h-[29px] w-fit items-center text-nowrap rounded-lg px-2 text-sm font-normal opacity-85 hover:opacity-95 ${
-                                selectedTag === item.attributes.name
+                                selectedTag === item
                                   ? 'bg-Hof-df text-white'
                                   : 'bg-white text-Hof-df'
                               }`}
                               onClick={(e) => {
                                 e.preventDefault();
                                 // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-                                selectedTag === item.attributes.name
+                                selectedTag === item
                                   ? setSelectedTag('')
-                                  : setSelectedTag(item.attributes.name);
+                                  : setSelectedTag(item);
                                 setSearchValueShow('');
                                 setSearchString('');
                               }}
                             >
-                              {`#${item.attributes.name}`}
+                              {`#${item}`}
                             </button>
                           );
                         })
