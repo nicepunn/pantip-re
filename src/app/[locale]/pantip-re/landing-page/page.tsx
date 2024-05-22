@@ -156,10 +156,9 @@ import { z } from 'zod';
 
 // import bgimg1 from '../assets/bgimg1.png';
 // import bgimg2 from '../assets/bgimg2.jpeg';
-import profile from '../assets/profile.jpg';
 import { Form } from '../component/Form';
 import TopicCard from '../component/TopicCard';
-import type { Meta, Post } from '../interface';
+import type { Post } from '../interface';
 
 interface FeedItem {
   title?: string;
@@ -169,52 +168,52 @@ interface FeedItem {
 const parser = new Parser();
 
 // eslint-disable-next-line unused-imports/no-unused-vars
-const mockPosts: Post[] = [
-  {
-    creator: 'John Doe',
-    title: 'Lorem Ipsum Dolor Sit Amet',
-    link: 'https://example.com/post1',
-    pubDate: '2024-05-20T08:00:00Z',
-    content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-    contentSnippet: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-    categories: ['Tech', 'Programming'],
-    isoDate: '2024-05-20T08:00:00Z',
-    coverImg:
-      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQfZ5Cl3V0oy7WXC5D4q-DbnJQYTo35hHu9qRosauNr5g&s',
-    authorImg: profile,
-    commentCount: 10,
-  },
-  {
-    creator: 'Jane Smith',
-    title: 'Nulla Facilisi',
-    link: 'https://example.com/post2',
-    pubDate: '2024-05-19T08:00:00Z',
-    content: 'Nulla facilisi. Sed ut ligula eget nisi vehicula sodales.',
-    contentSnippet: 'Nulla facilisi. Sed ut ligula eget nisi vehicula sodales.',
-    categories: ['Science', 'Research'],
-    isoDate: '2024-05-19T08:00:00Z',
-    coverImg: null,
-    authorImg: profile,
-    commentCount: 4,
-  },
-  // Repeat similar structures for other posts
-  {
-    creator: 'Alice Johnson',
-    title: 'Vestibulum Ante Ipsum Primis',
-    link: 'https://example.com/post12',
-    pubDate: '2024-05-08T08:00:00Z',
-    content:
-      'Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae.',
-    contentSnippet:
-      'Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae.',
-    categories: ['Travel', 'Adventure'],
-    isoDate: '2024-05-08T08:00:00Z',
-    coverImg:
-      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsuaGN1PaTeRiUEc9Vb74XQYruHzIWtn1khha7gmN25Q&s',
-    authorImg: null,
-    commentCount: 23,
-  },
-];
+// const mockPosts: Post[] = [
+//   {
+//     creator: 'John Doe',
+//     title: 'Lorem Ipsum Dolor Sit Amet',
+//     link: 'https://example.com/post1',
+//     pubDate: '2024-05-20T08:00:00Z',
+//     content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+//     contentSnippet: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+//     categories: ['Tech', 'Programming'],
+//     isoDate: '2024-05-20T08:00:00Z',
+//     coverImg:
+//       'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQfZ5Cl3V0oy7WXC5D4q-DbnJQYTo35hHu9qRosauNr5g&s',
+//     authorImg: profile,
+//     commentCount: 10,
+//   },
+//   {
+//     creator: 'Jane Smith',
+//     title: 'Nulla Facilisi',
+//     link: 'https://example.com/post2',
+//     pubDate: '2024-05-19T08:00:00Z',
+//     content: 'Nulla facilisi. Sed ut ligula eget nisi vehicula sodales.',
+//     contentSnippet: 'Nulla facilisi. Sed ut ligula eget nisi vehicula sodales.',
+//     categories: ['Science', 'Research'],
+//     isoDate: '2024-05-19T08:00:00Z',
+//     coverImg: null,
+//     authorImg: profile,
+//     commentCount: 4,
+//   },
+//   // Repeat similar structures for other posts
+//   {
+//     creator: 'Alice Johnson',
+//     title: 'Vestibulum Ante Ipsum Primis',
+//     link: 'https://example.com/post12',
+//     pubDate: '2024-05-08T08:00:00Z',
+//     content:
+//       'Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae.',
+//     contentSnippet:
+//       'Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae.',
+//     categories: ['Travel', 'Adventure'],
+//     isoDate: '2024-05-08T08:00:00Z',
+//     coverImg:
+//       'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsuaGN1PaTeRiUEc9Vb74XQYruHzIWtn1khha7gmN25Q&s',
+//     authorImg: null,
+//     commentCount: 23,
+//   },
+// ];
 
 function Loader() {
   return (
@@ -312,20 +311,20 @@ export default function Ground() {
   };
 
   // eslint-disable-next-line unused-imports/no-unused-vars
-  const [meta, setMeta] = useState<Meta | undefined | null>();
+  // const [meta, setMeta] = useState<Meta | undefined | null>();
   const [data, setData] = useState<Post[]>([]);
   const [isLoading, setLoading] = useState(true);
 
   // eslint-disable-next-line unused-imports/no-unused-vars
-  function loadMorePosts(): void {
-    // const nextPosts = meta!.pagination.start + meta!.pagination.limit;
-    // fetchData(
-    //   getUrlParamsValue("search"),
-    //   getUrlParamsValue("filter")
-    //   searchString,
-    //   selectedTag,
-    // );
-  }
+  // function loadMorePosts(): void {
+  //   const nextPosts = meta!.pagination.start + meta!.pagination.limit;
+  //   fetchData(
+  //     getUrlParamsValue("search"),
+  //     getUrlParamsValue("filter")
+  //     searchString,
+  //     selectedTag,
+  //   );
+  // }
 
   const [isShowAllPosts, setShowAllPosts] = useState(false);
 
