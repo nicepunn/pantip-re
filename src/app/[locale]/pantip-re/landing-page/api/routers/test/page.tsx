@@ -81,9 +81,7 @@ const parser = new Parser();
 export default function Test() {
   const [data, setData] = useState<Post[]>([]);
   const FetchLandingPage = useCallback(
-    async (
-      setAllPosts: Dispatch<SetStateAction<Post[] | undefined>>,
-    ): Promise<void> => {
+    async (setAllPosts: Dispatch<SetStateAction<Post[]>>): Promise<void> => {
       const posts: Post[] = [];
       try {
         // console.log('Fetching landing page post');

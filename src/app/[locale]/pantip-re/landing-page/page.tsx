@@ -168,6 +168,7 @@ interface FeedItem {
 
 const parser = new Parser();
 
+// eslint-disable-next-line unused-imports/no-unused-vars
 const mockPosts: Post[] = [
   {
     creator: 'John Doe',
