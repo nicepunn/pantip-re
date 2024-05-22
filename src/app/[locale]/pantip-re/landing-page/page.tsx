@@ -370,6 +370,7 @@ export default function Ground() {
   useEffect(() => {
     router.push(createPageURL(searchString, selectedTag));
     FetchLandingPage(setData, searchString, selectedTag);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [FetchLandingPage, router, searchString, selectedTag]);
 
   useEffect(() => {

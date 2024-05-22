@@ -49,14 +49,15 @@ export default function TopicCard({
     } else {
       setDataShow(filteredData.slice(0, Math.min(12, data.length)));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchString, selectedTag, isShowAllPost]);
 
-  useEffect(() => {
-    console.log(
-      `isShowAllPost: ${isShowAllPost} \n searchString: ${searchString} \n selectedTag: ${selectedTag}`,
-    );
-    console.log(dataShow);
-  }, [dataShow]);
+  // useEffect(() => {
+  //   console.log(
+  //     `isShowAllPost: ${isShowAllPost} \n searchString: ${searchString} \n selectedTag: ${selectedTag}`,
+  //   );
+  //   console.log(dataShow);
+  // }, [dataShow]);
 
   return (
     <div className="flex w-full flex-col items-center overflow-y-auto">
@@ -75,7 +76,11 @@ export default function TopicCard({
                 (post.title?.includes(searchString) ||
                   post.content?.includes(searchString))) ||
               (selectedTag === '' && searchString === '') ? (
-              <Link className="flex size-fit" href={post.link} key={post.link}>
+              <Link
+                className="flex size-fit"
+                href={post.link ?? '/'}
+                key={post.link}
+              >
                 <div
                   style={{
                     backgroundImage: `url(${
