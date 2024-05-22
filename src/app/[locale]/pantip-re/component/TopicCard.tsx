@@ -3,7 +3,12 @@
 // import { getStrapiMedia } from '@utils/api-helpers';
 import Image from 'next/image';
 import Link from 'next/link';
-import React, { type Dispatch, type SetStateAction } from 'react';
+import React, {
+  type Dispatch,
+  type SetStateAction,
+  useEffect,
+  useState,
+} from 'react';
 
 import anonymous from '../assets/anonymous.jpg';
 import type { Post } from '../interface';
@@ -11,33 +16,65 @@ import type { Post } from '../interface';
 export default function TopicCard({
   data,
   setSearchString,
+  searchString,
   setSearchValueShow,
   selectedTag,
   setSelectedTag,
+  isShowAllPost,
   children,
 }: {
   data: Post[];
   setSearchString: Dispatch<SetStateAction<string>>;
+  searchString: string;
   setSearchValueShow: Dispatch<SetStateAction<string>>;
   selectedTag: string;
   setSelectedTag: Dispatch<SetStateAction<string>>;
+  isShowAllPost: boolean;
   children?: React.ReactNode;
 }) {
+  const [dataShow, setDataShow] = useState(data.slice(0, 12));
+
+  useEffect(() => {
+    const filteredData = data.filter(
+      (post: Post) =>
+        (selectedTag !== '' && post.categories?.includes(selectedTag)) ||
+        (searchString !== '' &&
+          (post.title?.includes(searchString) ||
+            post.content?.includes(searchString))) ||
+        (selectedTag === '' && searchString === ''),
+    );
+
+    if (isShowAllPost) {
+      setDataShow(filteredData);
+    } else {
+      setDataShow(filteredData.slice(0, Math.min(12, data.length)));
+    }
+  }, [searchString, selectedTag, isShowAllPost]);
+
+  useEffect(() => {
+    console.log(
+      `isShowAllPost: ${isShowAllPost} \n searchString: ${searchString} \n selectedTag: ${selectedTag}`,
+    );
+    console.log(dataShow);
+  }, [dataShow]);
+
   return (
     <div className="flex w-full flex-col items-center overflow-y-auto">
       <div className="flex w-full flex-wrap justify-center gap-16 gap-x-[40px] gap-y-8">
         {/* <div className="grid gap-x-[60px] gap-y-6 grid-flow-row grid-cols-[repeat(auto-fill,340px)]"> */}
-        {data && data.length !== 0 ? (
-          data.map((post: Post) => {
-            // const imageUrl = post.attributes.cover.data?.attributes.url;
-            const imageUrl = post.coverImg;
-
-            // const avatarUrl = getStrapiMedia(
-            //   authorsBio?.avatar.data.attributes.url,
-            // );
+        {dataShow && dataShow.length !== 0 ? (
+          dataShow.map((post: Post) => {
+            const imageUrl =
+              post.coverImg ??
+              'https://images.rawpixel.com/image_800/czNmcy1wcml2YXRlL3Jhd3BpeGVsX2ltYWdlcy93ZWJzaXRlX2NvbnRlbnQvbHIvdjU0NmJhdGNoMy1teW50LTM0LWJhZGdld2F0ZXJjb2xvcl8xLmpwZw.jpg';
             const avatarUrl = post.authorImg;
             const liststr = post.categories;
-            return (
+            return (selectedTag !== '' &&
+              post.categories?.includes(selectedTag)) ||
+              (searchString !== '' &&
+                (post.title?.includes(searchString) ||
+                  post.content?.includes(searchString))) ||
+              (selectedTag === '' && searchString === '') ? (
               <Link className="flex size-fit" href={post.link} key={post.link}>
                 <div
                   style={{
@@ -49,7 +86,7 @@ export default function TopicCard({
                     backgroundSize: 'cover',
                     backgroundBlendMode: 'overlay',
                   }}
-                  className="flex h-[250px] w-[300px] flex-col overflow-hidden rounded-lg px-6 py-4"
+                  className="flex h-[190px] w-[415px] flex-col overflow-hidden rounded-lg px-6 py-4"
                 >
                   <div className="flex h-fit w-full flex-col gap-y-1">
                     <div className="flex h-fit w-full items-center py-0.5">
@@ -110,7 +147,7 @@ export default function TopicCard({
                         <div className="line-clamp-1 pb-0.5 text-sm font-normal text-white">
                           {post.commentCount
                             ? post.commentCount.toString()
-                            : '0'}
+                            : 'N/A'}
                         </div>
                       </div>
                     </div>
@@ -150,6 +187,9 @@ export default function TopicCard({
                   </div>
                 </div>
               </Link>
+            ) : (
+              // eslint-disable-next-line react/jsx-no-useless-fragment
+              <></>
             );
           })
         ) : (

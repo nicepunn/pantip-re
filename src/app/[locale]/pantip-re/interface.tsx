@@ -57,17 +57,17 @@ export interface Meta {
   };
 }
 export interface Post {
-  creator: string;
-  title: string;
-  link: string;
-  pubDate: string;
-  content: string;
-  contentSnippet: string;
-  categories: string[];
-  isoDate: string;
+  creator: string | null;
+  title: string | null | undefined;
+  link: string | null;
+  pubDate: string | null;
+  content: string | null;
+  contentSnippet: string | null;
+  categories: string[] | null;
+  isoDate: string | null;
   coverImg: string | null;
-  authorImg: any;
-  commentCount: number;
+  authorImg: any | null;
+  commentCount: number | null;
 }
 
 export interface AllPosts {

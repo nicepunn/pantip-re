@@ -143,8 +143,15 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 // import { fetchAPI } from '@utils/fetch-api';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { useCallback, useEffect, useState } from 'react';
+import {
+  type Dispatch,
+  type SetStateAction,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
 import { useForm } from 'react-hook-form';
+import Parser from 'rss-parser';
 import { z } from 'zod';
 
 // import bgimg1 from '../assets/bgimg1.png';
@@ -152,7 +159,14 @@ import { z } from 'zod';
 import profile from '../assets/profile.jpg';
 import { Form } from '../component/Form';
 import TopicCard from '../component/TopicCard';
-import type { AllPosts, Meta, Post } from '../interface';
+import type { Meta, Post } from '../interface';
+
+interface FeedItem {
+  title?: string;
+  [key: string]: any;
+}
+
+const parser = new Parser();
 
 const mockPosts: Post[] = [
   {
@@ -246,15 +260,6 @@ export default function Ground() {
   //   const params = new URLSearchParams(searchParams);
   //   return params.get(key) ?? '';
   // };
-
-  // async function test() {
-  //   const responseData = await FetchLandingPage();
-  //   console.log('test');
-  //   console.log(responseData);
-  // }
-  // test();
-  // for test response data**********************************************
-
   const methods = useForm({
     resolver: zodResolver(
       z.object({
@@ -277,7 +282,7 @@ export default function Ground() {
         <div className="h-fit p-1 text-[32px] font-semibold text-Arches-df">
           Pantip.com
         </div>
-        <div className="h-fit max-w-full text-sm font-normal text-Hof-df">
+        {/* <div className="h-fit max-w-full text-sm font-normal text-Hof-df">
           We{`'`}re thrilled to unveil the next chapter of our journey with you!
           Today marks a significant milestone as we introduce the refreshed
           Pantip.com—a platform built on innovation, connection, and community.
@@ -294,7 +299,7 @@ export default function Ground() {
           of discovery, connection, and growth. Welcome to the New
           Pantip.com—where ideas thrive, and communities flourish. Happy
           exploring!
-        </div>
+        </div> */}
       </div>
     ) : (
       <div className="flex w-full flex-col items-center gap-y-6">
@@ -307,59 +312,54 @@ export default function Ground() {
 
   // eslint-disable-next-line unused-imports/no-unused-vars
   const [meta, setMeta] = useState<Meta | undefined | null>();
-  // eslint-disable-next-line unused-imports/no-unused-vars
-  const [allPosts, setAllPosts] = useState<AllPosts>();
+  const [data, setData] = useState<Post[]>([]);
   const [isLoading, setLoading] = useState(true);
-  const fetchData = useCallback(
+
+  // eslint-disable-next-line unused-imports/no-unused-vars
+  function loadMorePosts(): void {
+    // const nextPosts = meta!.pagination.start + meta!.pagination.limit;
+    // fetchData(
+    //   getUrlParamsValue("search"),
+    //   getUrlParamsValue("filter")
+    //   searchString,
+    //   selectedTag,
+    // );
+  }
+
+  const [isShowAllPosts, setShowAllPosts] = useState(false);
+
+  const FetchLandingPage = useCallback(
     async (
-      start: number,
-      limit: number,
+      setAllPosts: Dispatch<SetStateAction<Post[]>>,
       _searchString: string,
       _selectedTag: string,
-    ) => {
+    ): Promise<void> => {
       setLoading(true);
+      const posts: Post[] = [];
       try {
-        const token = process.env.API_TOKEN; // add TOKEN
-        // eslint-disable-next-line unused-imports/no-unused-vars
-        const path = `/articles`;
-        const filters = _selectedTag
-          ? {
-              title: { $containsi: _searchString },
-              tags: { name: { $eq: _selectedTag } },
-            }
-          : {
-              title: { $containsi: _searchString },
-            };
-        // eslint-disable-next-line unused-imports/no-unused-vars
-        const urlParamsObject = {
-          sort: { createdAt: 'desc' },
-          populate: {
-            cover: { fields: ['url'] },
-            category: { populate: '*' },
-            authorsBio: {
-              populate: '*',
-            },
-            tags: { fields: ['name'] },
-          },
-          pagination: {
-            start,
-            limit,
-          },
-          filters,
-        };
-        // eslint-disable-next-line unused-imports/no-unused-vars
-        const options = { headers: { Authorization: `Bearer ${token}` } };
-        // const responseData = await FetchLandingPage();
-        // console.log(responseData);
-        // if (start === 0) {
-        //   setData(responseData);
-        // } else {
-        //   setData((prevData: any[]) => [...prevData, ...responseData]);
-        // }
-        // setMeta(responseData.meta);
+        // console.log('Fetching landing page post');
+        const feed = await parser.parseURL('https://pantip.com/forum/feed');
+        // console.log('Fetch finish');
+        feed.items.forEach((item: FeedItem) => {
+          const post: Post = {
+            creator: item.creator,
+            title: item.title ?? '',
+            link: item.link,
+            pubDate: item.pubDate,
+            content: item.content,
+            contentSnippet: item.contentSnippet,
+            categories: item.categories?.map((category: any) => category._),
+            isoDate: item.isoDate,
+            authorImg: null,
+            coverImg: null,
+            commentCount: null,
+          };
+          posts.push(post);
+        });
+        setAllPosts(posts);
       } catch (error) {
         // eslint-disable-next-line no-console
-        console.error(error);
+        console.error('Error fetching or parsing the RSS feed:', error);
       } finally {
         setLoading(false);
       }
@@ -367,44 +367,28 @@ export default function Ground() {
     [],
   );
 
-  // eslint-disable-next-line unused-imports/no-unused-vars
-  function loadMorePosts(): void {
-    // const nextPosts = meta!.pagination.start + meta!.pagination.limit;
-    // fetchData(
-    //   nextPosts,
-    //   Number(process.env.NEXT_PUBLIC_PAGE_LIMIT),
-    //   // getUrlParamsValue("search"),
-    //   // getUrlParamsValue("filter")
-    //   searchString,
-    //   selectedTag,
-    // );
-  }
-
   useEffect(() => {
     router.push(createPageURL(searchString, selectedTag));
-    fetchData(
-      0,
-      12,
-      // getUrlParamsValue("search"),
-      // getUrlParamsValue("filter")
-      searchString,
-      selectedTag,
-    );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    FetchLandingPage(setData, searchString, selectedTag);
+  }, [FetchLandingPage, router, searchString, selectedTag]);
+
+  useEffect(() => {
+    // eslint-disable-next-line no-console
+    console.log(data);
+  }, [data]);
+
+  useEffect(() => {
+    if (selectedTag !== '' || searchString !== '') {
+      setShowAllPosts(true);
+    }
   }, [searchString, selectedTag]);
 
   if (isLoading) return <Loader />;
 
-  // const mockMeta: Meta = {
-  //   pagination: {
-  //     start: 0,
-  //     limit: 6,
-  //     total: 12,
-  //   },
-  // };
-
   return (
-    <div className="flex size-full flex-col gap-y-6 px-2 pt-12 md:px-24">
+    <div
+      className={`flex size-full flex-col gap-y-6 px-2 pt-12 md:px-24 ${searchString === '' && selectedTag === '' ? '' : 'pb-12'}`}
+    >
       <div className="flex w-full flex-col gap-y-6" id="header">
         <Speach />
         {selectedTag === '' ? (
@@ -453,25 +437,27 @@ export default function Ground() {
         )}
       </div>
       <TopicCard
-        // data={data.posts}
-        data={mockPosts}
+        data={data}
         selectedTag={selectedTag}
         setSelectedTag={setSelectedTag}
+        searchString={searchString}
         setSearchString={setSearchString}
         setSearchValueShow={setSearchValueShow}
+        isShowAllPost={isShowAllPosts}
       >
-        {/* {meta!.pagination.start + meta!.pagination.limit <
-          meta!.pagination.total && (
+        {searchString === '' && selectedTag === '' && (
           <div className="flex justify-center">
             <button
               type="button"
               className="rounded-lg px-6 py-3 text-sm hover:underline dark:bg-gray-900 dark:text-gray-400"
-              onClick={loadMorePosts}
+              onClick={() => {
+                setShowAllPosts(!isShowAllPosts);
+              }}
             >
-              Load more posts...
+              {isShowAllPosts ? 'See less posts...' : 'See more posts...'}
             </button>
           </div>
-        )} */}
+        )}
       </TopicCard>
     </div>
   );

@@ -37,6 +37,7 @@
     "@t3-oss/env-nextjs": "^0.10.1",
     "axios": "^1.7.0",
     "drizzle-orm": "^0.30.10",
+    "express": "^4.19.2",
     "next": "^14.2.3",
     "next-intl": "^3.14.0",
     "pino": "^8.21.0",
@@ -47,6 +48,7 @@
     "rss-parser": "^3.13.0",
     "sharp": "^0.33.4",
     "uuid": "^9.0.1",
+    "xml2js": "^0.6.2",
     "zod": "^3.23.8"
   },
   "devDependencies": {
