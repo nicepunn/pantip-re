@@ -56,6 +56,11 @@ export interface Meta {
     total: number;
   };
 }
+
+export interface Tag {
+  name: string;
+  slug: string;
+}
 export interface Post {
   creator: string | null;
   title: string | null | undefined;
@@ -63,7 +68,7 @@ export interface Post {
   pubDate: string | null;
   content: string | null;
   contentSnippet: string | null;
-  categories: string[] | null;
+  tags: Tag[] | null;
   isoDate: string | null;
   coverImg: string | null;
   authorImg: any | null;

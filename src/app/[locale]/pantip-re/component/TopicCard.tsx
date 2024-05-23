@@ -11,14 +11,17 @@ import React, {
 } from 'react';
 
 import anonymous from '../assets/anonymous.jpg';
-import type { Post } from '../interface';
+import type { Post, Tag } from '../interface';
 
 export default function TopicCard({
   data,
+  // eslint-disable-next-line unused-imports/no-unused-vars
   setSearchString,
   searchString,
+  // eslint-disable-next-line unused-imports/no-unused-vars
   setSearchValueShow,
   selectedTag,
+  // eslint-disable-next-line unused-imports/no-unused-vars
   setSelectedTag,
   isShowAllPost,
   children,
@@ -27,8 +30,8 @@ export default function TopicCard({
   setSearchString: Dispatch<SetStateAction<string>>;
   searchString: string;
   setSearchValueShow: Dispatch<SetStateAction<string>>;
-  selectedTag: string;
-  setSelectedTag: Dispatch<SetStateAction<string>>;
+  selectedTag: Tag;
+  setSelectedTag: Dispatch<SetStateAction<Tag>>;
   isShowAllPost: boolean;
   children?: React.ReactNode;
 }) {
@@ -37,11 +40,11 @@ export default function TopicCard({
   useEffect(() => {
     const filteredData = data.filter(
       (post: Post) =>
-        (selectedTag !== '' && post.categories?.includes(selectedTag)) ||
+        (selectedTag.slug !== '' && post.tags?.includes(selectedTag)) ||
         (searchString !== '' &&
           (post.title?.includes(searchString) ||
             post.content?.includes(searchString))) ||
-        (selectedTag === '' && searchString === ''),
+        (selectedTag.slug === '' && searchString === ''),
     );
 
     if (isShowAllPost) {
@@ -50,14 +53,17 @@ export default function TopicCard({
       setDataShow(filteredData.slice(0, Math.min(12, data.length)));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchString, selectedTag, isShowAllPost]);
+  }, [searchString, selectedTag, isShowAllPost, data]);
 
-  // useEffect(() => {
-  //   console.log(
-  //     `isShowAllPost: ${isShowAllPost} \n searchString: ${searchString} \n selectedTag: ${selectedTag}`,
-  //   );
-  //   console.log(dataShow);
-  // }, [dataShow]);
+  useEffect(() => {
+    // eslint-disable-next-line no-console
+    console.log(
+      `isShowAllPost: ${isShowAllPost} \n searchString: ${searchString} \n selectedTag: ${selectedTag.name}`,
+    );
+    // eslint-disable-next-line no-console
+    console.log(dataShow);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dataShow]);
 
   return (
     <div className="flex w-full flex-col items-center overflow-y-auto">
@@ -69,13 +75,13 @@ export default function TopicCard({
               post.coverImg ??
               'https://images.rawpixel.com/image_800/czNmcy1wcml2YXRlL3Jhd3BpeGVsX2ltYWdlcy93ZWJzaXRlX2NvbnRlbnQvbHIvdjU0NmJhdGNoMy1teW50LTM0LWJhZGdld2F0ZXJjb2xvcl8xLmpwZw.jpg';
             const avatarUrl = post.authorImg;
-            const liststr = post.categories;
-            return (selectedTag !== '' &&
-              post.categories?.includes(selectedTag)) ||
+            const liststr = post.tags;
+            return (selectedTag.slug !== '' &&
+              post.tags?.includes(selectedTag)) ||
               (searchString !== '' &&
                 (post.title?.includes(searchString) ||
                   post.content?.includes(searchString))) ||
-              (selectedTag === '' && searchString === '') ? (
+              (selectedTag.slug === '' && searchString === '') ? (
               <Link
                 className="flex size-fit"
                 href={post.link ?? '/'}
@@ -85,13 +91,13 @@ export default function TopicCard({
                   style={{
                     backgroundImage: `url(${
                       imageUrl as string
-                    }), linear-gradient(180deg, rgba(47, 47, 47, 0.55) 0%, rgba(149, 149, 149, 0.00) 80%)
+                    }), linear-gradient(180deg, rgba(47, 47, 47, 0.55) 30%, rgba(149, 149, 149, 0.00) 70%)
 
                     `,
                     backgroundSize: 'cover',
                     backgroundBlendMode: 'overlay',
                   }}
-                  className="flex h-[190px] w-[415px] flex-col overflow-hidden rounded-lg px-6 py-4"
+                  className="flex h-[300px] w-[415px] flex-col overflow-hidden rounded-lg px-6 py-4"
                 >
                   <div className="flex h-fit w-full flex-col gap-y-1">
                     <div className="flex h-fit w-full items-center py-0.5">
@@ -160,7 +166,7 @@ export default function TopicCard({
                   <div className="flex size-full flex-col-reverse">
                     <div className="flex h-fit w-full flex-row gap-x-2 overflow-x-auto">
                       {liststr && liststr.length !== 0 ? (
-                        liststr.map((item: string, _index) => {
+                        liststr.map((item: Tag, _index) => {
                           return (
                             <button
                               type="button"
@@ -171,17 +177,17 @@ export default function TopicCard({
                                   ? 'bg-Hof-df text-white'
                                   : 'bg-white text-Hof-df'
                               }`}
-                              onClick={(e) => {
-                                e.preventDefault();
-                                // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-                                selectedTag === item
-                                  ? setSelectedTag('')
-                                  : setSelectedTag(item);
-                                setSearchValueShow('');
-                                setSearchString('');
-                              }}
+                              // onClick={(e) => {
+                              //   e.preventDefault();
+                              //   // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+                              //   selectedTag === item
+                              //     ? setSelectedTag({ name: '', slug: '' })
+                              //     : setSelectedTag(item);
+                              //   setSearchValueShow('');
+                              //   setSearchString('');
+                              // }}
                             >
-                              {`#${item}`}
+                              {`#${item.name}`}
                             </button>
                           );
                         })

@@ -26,7 +26,7 @@ export const FetchLandingPage = async (
         pubDate: item.pubDate,
         content: item.content,
         contentSnippet: item.contentSnippet,
-        categories: item.categories?.map((category: any) => category._),
+        tags: item.categories?.map((category: any) => category._),
         isoDate: item.isoDate,
         authorImg: null,
         coverImg: null,

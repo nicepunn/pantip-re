@@ -30,7 +30,7 @@ export default withSentryConfig(
         serverComponentsExternalPackages: ['pino'],
       },
       images: {
-        domains: ['example.com'], // Add your image hostnames here
+        domains: ['example.com', 'p.ptcdn.info'], // Add your image hostnames here
       },
     }),
   ),

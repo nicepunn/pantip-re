@@ -151,21 +151,13 @@ import {
   useState,
 } from 'react';
 import { useForm } from 'react-hook-form';
-import Parser from 'rss-parser';
 import { z } from 'zod';
 
 // import bgimg1 from '../assets/bgimg1.png';
 // import bgimg2 from '../assets/bgimg2.jpeg';
 import { Form } from '../component/Form';
 import TopicCard from '../component/TopicCard';
-import type { Post } from '../interface';
-
-interface FeedItem {
-  title?: string;
-  [key: string]: any;
-}
-
-const parser = new Parser();
+import type { Post, Tag } from '../interface';
 
 // eslint-disable-next-line unused-imports/no-unused-vars
 // const mockPosts: Post[] = [
@@ -244,8 +236,13 @@ function Loader() {
 export default function Ground() {
   const router = useRouter();
   const [searchString, setSearchString] = useState('');
-  const [selectedTag, setSelectedTag] = useState('');
+  const [posts, setPosts] = useState<any[]>([]);
+  // const [innerPosts, setInnerPosts] = useState<any[]>([]);
+  const [selectedTag, setSelectedTag] = useState<Tag>({ name: '', slug: '' });
+  // const [selectedTag, setSelectedTag] = useState('');
   const [searchValueShow, setSearchValueShow] = useState('');
+  // const [meta, setMeta] = useState<Meta | undefined | null>();
+  const [isLoading, setLoading] = useState(true);
 
   const searchParams = useSearchParams();
   const pathname = usePathname();
@@ -277,7 +274,7 @@ export default function Ground() {
 
   // eslint-disable-next-line react/no-unstable-nested-components
   const Speach = () => {
-    return selectedTag === '' ? (
+    return selectedTag.name === '' && selectedTag.slug === '' ? (
       <div className="flex w-full flex-col items-center gap-y-6">
         <div className="h-fit p-1 text-[32px] font-semibold text-Arches-df">
           Pantip.com
@@ -304,59 +301,133 @@ export default function Ground() {
     ) : (
       <div className="flex w-full flex-col items-center gap-y-6">
         <div className="h-fit text-[32px] font-semibold text-black">
-          {`#${selectedTag}`}
+          {`#${selectedTag.name}`}
         </div>
       </div>
     );
   };
 
-  // eslint-disable-next-line unused-imports/no-unused-vars
-  // const [meta, setMeta] = useState<Meta | undefined | null>();
-  const [data, setData] = useState<Post[]>([]);
-  const [isLoading, setLoading] = useState(true);
-
-  // eslint-disable-next-line unused-imports/no-unused-vars
-  // function loadMorePosts(): void {
-  //   const nextPosts = meta!.pagination.start + meta!.pagination.limit;
-  //   fetchData(
-  //     getUrlParamsValue("search"),
-  //     getUrlParamsValue("filter")
-  //     searchString,
-  //     selectedTag,
-  //   );
-  // }
-
   const [isShowAllPosts, setShowAllPosts] = useState(false);
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks, consistent-return
+  const FetchByFilter = useCallback(async (tag: Tag) => {
+    setLoading(true);
+    // eslint-disable-next-line unused-imports/no-unused-vars, @typescript-eslint/no-shadow
+    const tagName = tag.name;
+    const tagSlug = tag.slug;
+    try {
+      const response = await fetch(
+        `https://pantip.com/api/forum-service/tag/tag_topic_trend?tag_name=${encodeURIComponent(tagName)}&limit=12`,
+        {
+          headers: {
+            accept: 'application/json, text/plain, */*',
+            'accept-language': 'en-US,en;q=0.9,ja;q=0.8',
+            'cache-control': 'no-cache',
+            pragma: 'no-cache',
+            priority: 'u=1, i',
+            ptauthorize: 'Basic dGVzdGVyOnRlc3Rlcg==',
+            'sec-ch-ua':
+              '"Chromium";v="124", "Google Chrome";v="124", "Not-A.Brand";v="99"',
+            'sec-ch-ua-mobile': '?1',
+            'sec-ch-ua-platform': '"Android"',
+            'sec-fetch-dest': 'empty',
+            'sec-fetch-mode': 'cors',
+            'sec-fetch-site': 'same-origin',
+            cookie:
+              'pantip_visitc=sdwhabqACrALls69t; freq.5f73e63e47e7040e00000000=1; _gid=GA1.2.626793181.1716403335; ka_iid=UR86RgWwFKXWS2rUX7Ev3Q; ka_sid=6caz5VnQK8p9M9CGZWrSGu; iUUID=d6d366011c97026b544a9d89dc16a477; innity.dmp.254.sess.id=27388905.254.1716403335083; innity.dmp.cks.innity=1; _dc_gtm_UA-10478864-2=1; innity.dmp.254.sess=14.1716403335083.1716407152361.1716407166993; _ga=GA1.1.2050989694.1716403335; _ga_ZMC2WGXL4Z=GS1.1.1716403334.1.1.1716407173.21.0.0',
+            Referer: `https://pantip.com/tag/${encodeURIComponent(tagSlug)}`,
+            'Referrer-Policy': 'strict-origin-when-cross-origin',
+          },
+          body: null,
+          method: 'GET',
+        },
+      );
+      // eslint-disable-next-line no-console
+      console.log('Finished fetch');
+      const result = await response.json();
+      const { data } = result;
+      const post = data.map((item: any) => ({
+        creator: item.author ? item.author.name : null,
+        title: item.title || null,
+        link: item.author ? `https://pantip.com/topic/${item.topic_id}` : null,
+        pubDate: item.created_time || null,
+        content: null, // Assuming content is not provided in raw data
+        contentSnippet: null, // Assuming contentSnippet is not provided in raw data
+        tags: item.tags
+          ? item.tags.map((tagg: any) => ({ name: tagg.name, slug: tagg.slug }))
+          : null,
+        isoDate: item.created_time || null,
+        coverImg: item.thumbnail_url || null,
+        authorImg:
+          item.author && item.author.avatar
+            ? item.author.avatar.original
+            : null,
+        commentCount: item.comments_count || null,
+      }));
+      // setInnerPosts(post);
+      // setPosts(post);
+      return post;
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('Error fetching or parsing the RSS feed:', error);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   const FetchLandingPage = useCallback(
     async (
-      setAllPosts: Dispatch<SetStateAction<Post[]>>,
+      // eslint-disable-next-line @typescript-eslint/no-shadow
+      setPosts: Dispatch<SetStateAction<Post[]>>,
       _searchString: string,
-      _selectedTag: string,
-    ): Promise<void> => {
+      _selectedTag: Tag,
+    ) => {
       setLoading(true);
-      const posts: Post[] = [];
       try {
-        // console.log('Fetching landing page post');
-        const feed = await parser.parseURL('https://pantip.com/forum/feed');
-        // console.log('Fetch finish');
-        feed.items.forEach((item: FeedItem) => {
-          const post: Post = {
-            creator: item.creator,
-            title: item.title ?? '',
-            link: item.link,
-            pubDate: item.pubDate,
-            content: item.content,
-            contentSnippet: item.contentSnippet,
-            categories: item.categories?.map((category: any) => category._),
-            isoDate: item.isoDate,
-            authorImg: null,
-            coverImg: null,
-            commentCount: null,
-          };
-          posts.push(post);
-        });
-        setAllPosts(posts);
+        // eslint-disable-next-line no-console
+        console.log('Get data from local server');
+        const response = await fetch(
+          'https://pantip.com/api/forum-service/home/get_tag_hit?limit=10',
+          {
+            headers: {
+              accept: 'application/json, text/plain, */*',
+              'accept-language': 'en-US,en;q=0.9,ja;q=0.8',
+              priority: 'u=1, i',
+              ptauthorize: 'Basic dGVzdGVyOnRlc3Rlcg==',
+              'sec-ch-ua':
+                '"Chromium";v="124", "Google Chrome";v="124", "Not-A.Brand";v="99"',
+              'sec-ch-ua-mobile': '?1',
+              'sec-ch-ua-platform': '"Android"',
+              'sec-fetch-dest': 'empty',
+              'sec-fetch-mode': 'cors',
+              'sec-fetch-site': 'same-origin',
+              cookie:
+                'pantip_visitc=sdwhabqACrALls69t; _ga_ZMC2WGXL4Z=GS1.1.1716401809.1.1.1716403332.60.0.0; ka_sid=',
+              Referer: 'https://pantip.com/',
+              'Referrer-Policy': 'strict-origin-when-cross-origin',
+            },
+            body: null,
+            method: 'GET',
+          },
+        );
+        // eslint-disable-next-line no-console
+        console.log('Finished fetch');
+        const result = await response.json();
+        const { data } = result;
+        // const tags =
+        //   _selectedTag.name === '' && _selectedTag.slug === ''
+        //     ? data.map((item: any) => ({ name: item.name, slug: item.slug }))
+        //     : [_selectedTag];
+        const tags = data.map((item: any) => ({
+          name: item.name,
+          slug: item.slug,
+        }));
+        const postPromises = tags.map((tag: Tag) => FetchByFilter(tag));
+
+        const resolvedPosts = await Promise.all(postPromises);
+        const flattenedPosts = resolvedPosts.flat();
+
+        setPosts(flattenedPosts);
       } catch (error) {
         // eslint-disable-next-line no-console
         console.error('Error fetching or parsing the RSS feed:', error);
@@ -364,25 +435,30 @@ export default function Ground() {
         setLoading(false);
       }
     },
-    [],
+    [FetchByFilter],
   );
 
   useEffect(() => {
-    router.push(createPageURL(searchString, selectedTag));
-    FetchLandingPage(setData, searchString, selectedTag);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [FetchLandingPage, router, searchString, selectedTag]);
-
-  useEffect(() => {
-    // eslint-disable-next-line no-console
-    console.log(data);
-  }, [data]);
-
-  useEffect(() => {
-    if (selectedTag !== '' || searchString !== '') {
+    if (selectedTag.name !== '' || searchString !== '') {
       setShowAllPosts(true);
     }
   }, [searchString, selectedTag]);
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  useEffect(() => {
+    // createPageURL(searchString, selectedTag.slug);
+    FetchLandingPage(setPosts, searchString, selectedTag);
+    // const iData = FetchByFilter({
+    //   name: 'วันพีซ One piece',
+    //   slug: 'วันพีซ_One_piece',
+    // });
+    // setPosts(iData);
+  }, [FetchLandingPage, FetchByFilter, router, searchString, selectedTag]);
+
+  useEffect(() => {
+    // eslint-disable-next-line no-console
+    console.log(posts);
+  }, [posts]);
 
   if (isLoading) return <Loader />;
 
@@ -392,7 +468,7 @@ export default function Ground() {
     >
       <div className="flex w-full flex-col gap-y-6" id="header">
         <Speach />
-        {selectedTag === '' ? (
+        {selectedTag.slug === '' ? (
           <Form {...methods}>
             <form
               onSubmit={handleSubmit(formSubmit)}
@@ -438,7 +514,7 @@ export default function Ground() {
         )}
       </div>
       <TopicCard
-        data={data}
+        data={posts}
         selectedTag={selectedTag}
         setSelectedTag={setSelectedTag}
         searchString={searchString}
@@ -446,7 +522,7 @@ export default function Ground() {
         setSearchValueShow={setSearchValueShow}
         isShowAllPost={isShowAllPosts}
       >
-        {searchString === '' && selectedTag === '' && (
+        {searchString === '' && selectedTag.slug === '' && (
           <div className="flex justify-center">
             <button
               type="button"
