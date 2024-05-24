@@ -246,7 +246,7 @@ export default function Ground() {
         if (_searchString !== '') {
           try {
             const tags = await FetchBySearch(_searchString);
-            const limit = 12;
+            const limit = 24;
             return [tags, limit];
           } catch (error) {
             console.error('Error fetching posts by search:', error);
@@ -257,18 +257,18 @@ export default function Ground() {
             name: item.name,
             slug: item.slug,
           }));
-          const limit = 3;
+          const limit = 6;
           return [tags, limit];
         } else {
           const tags = [_selectedTag];
-          const limit = 72;
+          const limit = 192;
           return [tags, limit];
         }
       }
       try {
         console.log('Get data from local server');
         const response = await fetch(
-          'https://pantip.com/api/forum-service/home/get_tag_hit?limit=24',
+          'https://pantip.com/api/forum-service/home/get_tag_hit?limit=48',
           {
             headers: {
               accept: 'application/json, text/plain, */*',
