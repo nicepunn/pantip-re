@@ -324,9 +324,7 @@ export default function Ground() {
   if (isLoading) return <Loader />;
 
   return (
-    <div
-      className={`flex h-screen w-full flex-col gap-y-6 px-2 pt-12 md:px-[102px]`}
-    >
+    <div className="flex h-screen w-full flex-col gap-y-6 px-2 pt-6 md:px-[102px]">
       <div className="flex w-full flex-col gap-y-6" id="header">
         <Speach />
         {selectedTag.slug === '' ? (
