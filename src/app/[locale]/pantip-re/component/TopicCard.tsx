@@ -66,7 +66,7 @@ export default function TopicCard({
   return (
     <div className="flex w-full flex-col items-center overflow-y-auto">
       <div
-        className={`flex w-full flex-wrap justify-center gap-16 gap-x-[40px] gap-y-8 ${searchString === '' && selectedTag.slug === '' ? '' : 'pb-12'}`}
+        className={`flex w-full flex-wrap justify-center gap-16 gap-x-[40px] gap-y-8 ${searchString === '' && selectedTag.slug === '' ? '' : 'pb-12'} ${!dataShow || dataShow.length === 0 ? 'px-2' : ''}`}
       >
         {/* <div className="grid gap-x-[60px] gap-y-6 grid-flow-row grid-cols-[repeat(auto-fill,340px)]"> */}
         {dataShow && dataShow.length !== 0 ? (
@@ -232,7 +232,7 @@ export default function TopicCard({
                 stroke-linejoin="round"
               />
             </svg>
-            <div className="text-sm font-bold text-Hof-df">
+            <div className="line-clamp-1 text-sm font-bold text-Hof-df">
               Sorry, we couldn{`'`}t find any results.
             </div>
           </div>
