@@ -386,7 +386,7 @@ export default function Ground() {
           <div className="flex justify-center">
             <button
               type="button"
-              className="rounded-lg px-6 py-3 text-sm hover:underline dark:bg-gray-900 dark:text-gray-400"
+              className="rounded-lg px-6 py-3 text-sm hover:underline"
               onClick={() => {
                 setShowAllPosts(!isShowAllPosts);
               }}
