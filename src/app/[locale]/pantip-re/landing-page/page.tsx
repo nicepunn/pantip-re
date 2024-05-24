@@ -325,7 +325,7 @@ export default function Ground() {
 
   return (
     <div
-      className={`flex size-full flex-col gap-y-6 px-2 pt-12 md:px-[102px] ${searchString === '' && selectedTag.name === '' ? '' : 'pb-12'}`}
+      className={`flex h-screen w-full flex-col gap-y-6 px-2 pt-12 md:px-[102px]`}
     >
       <div className="flex w-full flex-col gap-y-6" id="header">
         <Speach />
@@ -387,7 +387,7 @@ export default function Ground() {
           <div className="flex justify-center">
             <button
               type="button"
-              className="rounded-lg px-6 py-3 text-sm hover:underline"
+              className="rounded-lg px-6 py-5 text-sm hover:underline md:py-3"
               onClick={() => {
                 setShowAllPosts(!isShowAllPosts);
               }}
