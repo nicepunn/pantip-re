@@ -142,7 +142,7 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 // import { fetchAPI } from '@utils/fetch-api';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import {
   type Dispatch,
   type SetStateAction,
@@ -244,15 +244,14 @@ export default function Ground() {
   // const [meta, setMeta] = useState<Meta | undefined | null>();
   const [isLoading, setLoading] = useState(true);
 
-  const searchParams = useSearchParams();
-  const pathname = usePathname();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const createPageURL = (_searchString: string, filterTag: string) => {
-    const params = new URLSearchParams(searchParams);
-    params.set('search', _searchString);
-    params.set('filter', filterTag);
-    return `${pathname}?${params.toString()}`;
-  };
+  // const searchParams = useSearchParams();
+  // const pathname = usePathname();
+  // const createPageURL = (_searchString: string, filterTag: string) => {
+  //   const params = new URLSearchParams(searchParams);
+  //   params.set('search', _searchString);
+  //   params.set('filter', filterTag);
+  //   return `${pathname}?${params.toString()}`;
+  // };
   // const getUrlParamsValue = (key: string) => {
   //   const params = new URLSearchParams(searchParams);
   //   return params.get(key) ?? '';
@@ -317,7 +316,7 @@ export default function Ground() {
     const tagSlug = tag.slug;
     try {
       const response = await fetch(
-        `https://pantip.com/api/forum-service/tag/tag_topic_trend?tag_name=${encodeURIComponent(tagName)}&limit=12`,
+        `https://pantip.com/api/forum-service/tag/tag_topic_trend?tag_name=${encodeURIComponent(tagName)}&limit=15`,
         {
           headers: {
             accept: 'application/json, text/plain, */*',
@@ -387,7 +386,7 @@ export default function Ground() {
         // eslint-disable-next-line no-console
         console.log('Get data from local server');
         const response = await fetch(
-          'https://pantip.com/api/forum-service/home/get_tag_hit?limit=10',
+          'https://pantip.com/api/forum-service/home/get_tag_hit?limit=12',
           {
             headers: {
               accept: 'application/json, text/plain, */*',
@@ -414,14 +413,14 @@ export default function Ground() {
         console.log('Finished fetch');
         const result = await response.json();
         const { data } = result;
-        // const tags =
-        //   _selectedTag.name === '' && _selectedTag.slug === ''
-        //     ? data.map((item: any) => ({ name: item.name, slug: item.slug }))
-        //     : [_selectedTag];
-        const tags = data.map((item: any) => ({
-          name: item.name,
-          slug: item.slug,
-        }));
+        const tags =
+          _selectedTag.name === '' && _selectedTag.slug === ''
+            ? data.map((item: any) => ({ name: item.name, slug: item.slug }))
+            : [_selectedTag];
+        // const tags = data.map((item: any) => ({
+        //   name: item.name,
+        //   slug: item.slug,
+        // }));
         const postPromises = tags.map((tag: Tag) => FetchByFilter(tag));
 
         const resolvedPosts = await Promise.all(postPromises);
@@ -464,7 +463,7 @@ export default function Ground() {
 
   return (
     <div
-      className={`flex size-full flex-col gap-y-6 px-2 pt-12 md:px-24 ${searchString === '' && selectedTag === '' ? '' : 'pb-12'}`}
+      className={`flex size-full flex-col gap-y-6 px-2 pt-12 md:px-24 ${searchString === '' && selectedTag.name === '' ? '' : 'pb-12'}`}
     >
       <div className="flex w-full flex-col gap-y-6" id="header">
         <Speach />

@@ -1,3 +1,5 @@
+/* eslint-disable unused-imports/no-unused-vars */
+
 'use client';
 
 // import { getStrapiMedia } from '@utils/api-helpers';
@@ -15,13 +17,10 @@ import type { Post, Tag } from '../interface';
 
 export default function TopicCard({
   data,
-  // eslint-disable-next-line unused-imports/no-unused-vars
   setSearchString,
   searchString,
-  // eslint-disable-next-line unused-imports/no-unused-vars
   setSearchValueShow,
   selectedTag,
-  // eslint-disable-next-line unused-imports/no-unused-vars
   setSelectedTag,
   isShowAllPost,
   children,
@@ -40,7 +39,8 @@ export default function TopicCard({
   useEffect(() => {
     const filteredData = data.filter(
       (post: Post) =>
-        (selectedTag.slug !== '' && post.tags?.includes(selectedTag)) ||
+        (selectedTag.slug !== '' &&
+          post.tags?.some((tag) => tag.slug === selectedTag.slug)) ||
         (searchString !== '' &&
           (post.title?.includes(searchString) ||
             post.content?.includes(searchString))) ||
@@ -65,6 +65,10 @@ export default function TopicCard({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dataShow]);
 
+  // useEffect(() => {
+  //   console.log(selectedTag);
+  // }, [selectedTag]);
+
   return (
     <div className="flex w-full flex-col items-center overflow-y-auto">
       <div className="flex w-full flex-wrap justify-center gap-16 gap-x-[40px] gap-y-8">
@@ -77,7 +81,7 @@ export default function TopicCard({
             const avatarUrl = post.authorImg;
             const liststr = post.tags;
             return (selectedTag.slug !== '' &&
-              post.tags?.includes(selectedTag)) ||
+              post.tags?.some((tag) => tag.slug === selectedTag.slug)) ||
               (searchString !== '' &&
                 (post.title?.includes(searchString) ||
                   post.content?.includes(searchString))) ||
@@ -173,19 +177,19 @@ export default function TopicCard({
                               // eslint-disable-next-line react/no-array-index-key
                               key={_index}
                               className={`flex h-[29px] w-fit items-center text-nowrap rounded-lg px-2 text-sm font-normal opacity-85 hover:opacity-95 ${
-                                selectedTag === item
+                                selectedTag.slug === item.slug
                                   ? 'bg-Hof-df text-white'
                                   : 'bg-white text-Hof-df'
                               }`}
-                              // onClick={(e) => {
-                              //   e.preventDefault();
-                              //   // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-                              //   selectedTag === item
-                              //     ? setSelectedTag({ name: '', slug: '' })
-                              //     : setSelectedTag(item);
-                              //   setSearchValueShow('');
-                              //   setSearchString('');
-                              // }}
+                              onClick={(e) => {
+                                e.preventDefault();
+                                // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+                                selectedTag.slug === item.slug
+                                  ? setSelectedTag({ name: '', slug: '' })
+                                  : setSelectedTag(item);
+                                setSearchValueShow('');
+                                setSearchString('');
+                              }}
                             >
                               {`#${item.name}`}
                             </button>

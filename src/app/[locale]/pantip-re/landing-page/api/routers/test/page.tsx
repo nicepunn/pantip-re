@@ -17,7 +17,7 @@ import type { Post, Tag } from '@/app/[locale]/pantip-re/interface';
 
 export default function Test() {
   const FetchByFilter = useCallback(async (tag: Tag) => {
-    const posts: Post[] = [];
+    // const posts: Post[] = [];
     const tagName = tag.name;
     const tagSlug = tag.slug;
     try {
@@ -140,7 +140,7 @@ export default function Test() {
   );
 
   const [posts, setPosts] = useState<any[]>([]);
-  const [selectedTag, setSelectedTag] = useState<Tag>({ name: '', slug: '' });
+  const [selectedTag] = useState<Tag>({ name: '', slug: '' });
   useEffect(() => {
     FetchLandingPage(setPosts, '', selectedTag);
   }, []);
