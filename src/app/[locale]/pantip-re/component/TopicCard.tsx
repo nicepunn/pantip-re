@@ -66,7 +66,7 @@ export default function TopicCard({
   return (
     <div className="flex w-full flex-col items-center overflow-y-auto">
       <div
-        className={`flex w-full flex-wrap justify-center gap-16 gap-x-[40px] gap-y-8 ${searchString === '' && selectedTag.name === '' ? '' : 'pb-12'}`}
+        className={`flex w-full flex-wrap justify-center gap-16 gap-x-[40px] gap-y-8 ${searchString === '' && selectedTag.slug === '' ? '' : 'pb-12'}`}
       >
         {/* <div className="grid gap-x-[60px] gap-y-6 grid-flow-row grid-cols-[repeat(auto-fill,340px)]"> */}
         {dataShow && dataShow.length !== 0 ? (
