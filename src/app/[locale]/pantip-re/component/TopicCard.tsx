@@ -186,7 +186,7 @@ export default function TopicCard({
                               type="button"
                               // eslint-disable-next-line react/no-array-index-key
                               key={_index}
-                              className={`flex h-[35px] w-fit items-center text-nowrap rounded-lg px-3 text-lg font-normal opacity-85 hover:opacity-95 md:h-[29px] md:px-2 md:text-sm ${
+                              className={`flex h-[35px] w-fit items-center text-nowrap rounded-lg px-3 text-lg font-medium opacity-85 hover:opacity-95 md:h-[29px] md:px-2 md:text-sm md:font-normal ${
                                 selectedTag.slug === item.slug
                                   ? 'bg-Hof-df text-white'
                                   : 'bg-white text-Hof-df'
