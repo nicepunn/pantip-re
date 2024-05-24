@@ -325,7 +325,7 @@ export default function Ground() {
 
   return (
     <div
-      className={`flex h-screen w-full flex-col px-3 pt-1 md:px-[102px] md:pt-6 ${searchString === '' && selectedTag.name === '' ? 'gap-y-6' : 'gap-y-0'}`}
+      className={`flex h-screen w-full flex-col px-3 pt-1 md:px-[102px] md:pt-6 ${selectedTag.name === '' ? 'gap-y-6' : 'gap-y-0'}`}
     >
       <div
         className="flex w-full flex-col gap-y-1 px-2 md:gap-y-6 md:px-0"
