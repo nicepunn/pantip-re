@@ -1,9 +1,10 @@
+/* eslint-disable consistent-return */
+/* eslint-disable @typescript-eslint/no-shadow */
 /* eslint-disable no-console */
 
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-// import { fetchAPI } from '@utils/fetch-api';
 import { useRouter } from 'next/navigation';
 import {
   type Dispatch,
@@ -49,9 +50,7 @@ export default function Ground() {
   const router = useRouter();
   const [searchString, setSearchString] = useState('');
   const [posts, setPosts] = useState<any[]>([]);
-  // const [innerPosts, setInnerPosts] = useState<any[]>([]);
   const [selectedTag, setSelectedTag] = useState<Tag>({ name: '', slug: '' });
-  // const [selectedTag, setSelectedTag] = useState('');
   const [searchValueShow, setSearchValueShow] = useState('');
   // const [meta, setMeta] = useState<Meta | undefined | null>();
   const [isLoading, setLoading] = useState(true);
@@ -120,7 +119,6 @@ export default function Ground() {
 
   const [isShowAllPosts, setShowAllPosts] = useState(false);
 
-  // eslint-disable-next-line react-hooks/rules-of-hooks, consistent-return
   const FetchBySearch = useCallback(async (searchStringForFetch: string) => {
     try {
       const response = await fetch(
@@ -152,20 +150,24 @@ export default function Ground() {
       );
       const result = await response.json();
       const { data } = result;
-      const post = data.map((item: any) => ({
-        name: item.title,
-        slug: item.slug,
-      }));
+      const post = data
+        .filter((item: any) => item !== undefined && item !== null)
+        .map((item: any) =>
+          item.type === 'tags'
+            ? {
+                name: item?.title ?? null,
+                slug: item?.slug ?? null,
+              }
+            : null,
+        )
+        .filter((item: any) => item !== undefined && item !== null);
       return post;
     } catch (error) {
-      // eslint-disable-next-line no-console
       console.error('Inner fetch error (fetch by search): ', error);
     }
   }, []);
 
-  // eslint-disable-next-line react-hooks/rules-of-hooks, consistent-return
   const FetchByFilter = useCallback(async (tag: Tag) => {
-    // eslint-disable-next-line unused-imports/no-unused-vars, @typescript-eslint/no-shadow
     const tagName = tag.name;
     const tagSlug = tag.slug;
     try {
@@ -195,40 +197,42 @@ export default function Ground() {
           method: 'GET',
         },
       );
-      // eslint-disable-next-line no-console
       console.log('Finished fetch');
       const result = await response.json();
       const { data } = result;
-      const post = data.map((item: any) => ({
-        creator: item.author ? item.author.name : null,
-        title: item.title || null,
-        link: item.author ? `https://pantip.com/topic/${item.topic_id}` : null,
-        pubDate: item.created_time || null,
-        content: null, // Assuming content is not provided in raw data
-        contentSnippet: null, // Assuming contentSnippet is not provided in raw data
-        tags: item.tags
-          ? item.tags.map((tagg: any) => ({ name: tagg.name, slug: tagg.slug }))
-          : null,
-        isoDate: item.created_time || null,
-        coverImg: item.thumbnail_url || null,
-        authorImg:
-          item.author && item.author.avatar
-            ? item.author.avatar.original
+      const post = data
+        .filter((item: any) => item !== undefined && item !== null)
+        .map((item: any) => ({
+          creator: item?.author ? item.author.name : null,
+          title: item?.title || null,
+          link: item?.author
+            ? `https://pantip.com/topic/${item.topic_id}`
             : null,
-        commentCount: item.comments_count || null,
-      }));
-      // setInnerPosts(post);
-      // setPosts(post);
+          pubDate: item?.created_time || null,
+          content: null, // Assuming content is not provided in raw data
+          contentSnippet: null, // Assuming contentSnippet is not provided in raw data
+          tags: item?.tags
+            ? item.tags.map((tagg: any) => ({
+                name: tagg.name,
+                slug: tagg.slug,
+              }))
+            : null,
+          isoDate: item?.created_time || null,
+          coverImg: item?.thumbnail_url || null,
+          authorImg:
+            item?.author && item?.author.avatar
+              ? item.author.avatar.original
+              : null,
+          commentCount: item?.comments_count || null,
+        }));
       return post;
     } catch (error) {
-      // eslint-disable-next-line no-console
       console.error('Inner fetch error (fetch by filter): ', error);
     }
   }, []);
 
   const FetchLandingPage = useCallback(
     async (
-      // eslint-disable-next-line @typescript-eslint/no-shadow
       setPosts: Dispatch<SetStateAction<Post[]>>,
       _searchString: string,
       _selectedTag: Tag,
@@ -245,7 +249,7 @@ export default function Ground() {
             return result;
           } catch (error) {
             console.error('Error fetching posts by search:', error);
-            return []; // Return an empty array or handle the error as needed
+            return [];
           }
         } else if (_selectedTag.name === '' && _selectedTag.slug === '') {
           return _data.map((item: any) => ({
@@ -257,7 +261,6 @@ export default function Ground() {
         }
       }
       try {
-        // eslint-disable-next-line no-console
         console.log('Get data from local server');
         const response = await fetch(
           'https://pantip.com/api/forum-service/home/get_tag_hit?limit=12',
@@ -295,7 +298,6 @@ export default function Ground() {
 
         setPosts(flattenedPosts);
       } catch (error) {
-        // eslint-disable-next-line no-console
         console.error('Error fetching or parsing the RSS feed:', error);
       } finally {
         setLoading(false);
@@ -310,7 +312,6 @@ export default function Ground() {
     }
   }, [searchString, selectedTag]);
 
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
     // createPageURL(searchString, selectedTag.slug);
     FetchLandingPage(setPosts, searchString, selectedTag);

@@ -41,6 +41,7 @@ export default function TopicCard({
     const filteredData = data.filter(
       (post: Post) =>
         post &&
+        post.link !== null &&
         ((selectedTag.slug !== '' &&
           post.tags?.some((tag) => tag.slug === selectedTag.slug)) ||
           searchString !== '' ||
@@ -52,7 +53,6 @@ export default function TopicCard({
     } else {
       setDataShow(filteredData.slice(0, Math.min(12, data.length)));
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchString, selectedTag, isShowAllPost, data]);
 
   // useEffect(() => {
@@ -75,6 +75,7 @@ export default function TopicCard({
             const avatarUrl = post?.authorImg;
             const liststr = post?.tags;
             return post &&
+              post.link !== null &&
               ((selectedTag.slug !== '' &&
                 post.tags?.some((tag) => tag.slug === selectedTag.slug)) ||
                 searchString !== '' ||
