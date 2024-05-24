@@ -324,8 +324,11 @@ export default function Ground() {
   if (isLoading) return <Loader />;
 
   return (
-    <div className="flex h-screen w-full flex-col gap-y-6 px-2 pt-6 md:px-[102px]">
-      <div className="flex w-full flex-col gap-y-6" id="header">
+    <div className="flex h-screen w-full flex-col gap-y-6 px-3 pt-1 md:px-[102px] md:pt-6">
+      <div
+        className="flex w-full flex-col gap-y-1 px-2 md:gap-y-6 md:px-0"
+        id="header"
+      >
         <Speach />
         {selectedTag.slug === '' ? (
           <Form {...methods}>
