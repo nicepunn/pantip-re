@@ -110,7 +110,7 @@ export default function Ground() {
       </div>
     ) : (
       <div className="flex w-full flex-col items-center">
-        <div className="line-clamp-1 h-fit text-[32px] font-semibold text-black">
+        <div className="line-clamp-1 h-fit py-1 text-[32px] font-semibold text-black md:py-0">
           {`#${selectedTag.name}`}
         </div>
       </div>
