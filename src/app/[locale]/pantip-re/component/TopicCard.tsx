@@ -38,20 +38,34 @@ export default function TopicCard({
   const [dataShow, setDataShow] = useState(data.slice(0, 12));
 
   useEffect(() => {
-    const filteredData = data.filter(
-      (post: Post) =>
-        post &&
-        post.link !== null &&
-        ((selectedTag.slug !== '' &&
-          post.tags?.some((tag) => tag.slug === selectedTag.slug)) ||
-          searchString !== '' ||
-          (selectedTag.slug === '' && searchString === '')),
-    );
+    const filteredData = data
+      .filter(
+        (post: Post) =>
+          post &&
+          post.link !== null &&
+          ((selectedTag.slug !== '' &&
+            post.tags?.some((tag) => tag.slug === selectedTag.slug)) ||
+            searchString !== '' ||
+            (selectedTag.slug === '' && searchString === '')),
+      )
+      .reduce((unique: Post[], current) => {
+        const title = current.title ?? '';
+        if (!unique.some((post) => post.title === title)) {
+          unique.push(current);
+        }
+        return unique;
+      }, []);
+
+    filteredData.sort((post1, post2) => {
+      const date1 = post1.pubDate ?? '';
+      const date2 = post2.pubDate ?? '';
+      return date2.localeCompare(date1);
+    });
 
     if (isShowAllPost) {
       setDataShow(filteredData);
     } else {
-      setDataShow(filteredData.slice(0, Math.min(12, data.length)));
+      setDataShow(filteredData.slice(0, Math.min(12, filteredData.length)));
     }
   }, [searchString, selectedTag, isShowAllPost, data]);
 
@@ -172,7 +186,7 @@ export default function TopicCard({
                               type="button"
                               // eslint-disable-next-line react/no-array-index-key
                               key={_index}
-                              className={`flex h-[29px] w-fit items-center text-nowrap rounded-lg px-2 text-sm font-normal opacity-85 hover:opacity-95 ${
+                              className={`flex h-[35px] w-fit items-center text-nowrap rounded-lg px-3 text-lg font-normal opacity-85 hover:opacity-95 md:h-[29px] md:px-2 md:text-sm ${
                                 selectedTag.slug === item.slug
                                   ? 'bg-Hof-df text-white'
                                   : 'bg-white text-Hof-df'
