@@ -325,7 +325,7 @@ export default function Ground() {
 
   return (
     <div
-      className={`flex size-full flex-col gap-y-6 px-2 pt-12 md:px-24 ${searchString === '' && selectedTag.name === '' ? '' : 'pb-12'}`}
+      className={`flex size-full flex-col gap-y-6 px-2 pt-12 md:px-[102px] ${searchString === '' && selectedTag.name === '' ? '' : 'pb-12'}`}
     >
       <div className="flex w-full flex-col gap-y-6" id="header">
         <Speach />

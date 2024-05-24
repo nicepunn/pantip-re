@@ -95,7 +95,7 @@ export default function TopicCard({
                     backgroundSize: 'cover',
                     backgroundBlendMode: 'overlay',
                   }}
-                  className="flex h-[300px] w-[415px] flex-col overflow-hidden rounded-lg px-6 py-4"
+                  className="flex h-[300px] w-[400px] flex-col overflow-hidden rounded-lg px-6 py-4"
                 >
                   <div className="flex h-fit w-full flex-col gap-y-1">
                     <div className="flex h-fit w-full items-center py-0.5">
