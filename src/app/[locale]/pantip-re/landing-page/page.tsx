@@ -1,142 +1,4 @@
-// import { zodResolver } from '@hookform/resolvers/zod';
-// import { Loader } from '@storybook/react';
-// import router from 'next/dist/shared/lib/router/router';
-// import { usePathname, useSearchParams } from 'next/navigation';
-// import { useCallback, useEffect } from 'react';
-// import { useForm } from 'react-hook-form';
-// import { z } from 'zod';
-
-// import Ground from './_component/Ground';
-// import { FetchLandingPage } from './api/routers/posts';
-
-// export default function LandingPage() {
-//   // async function fetch() {
-//   //   const data = await FetchLandingPage();
-//   //   console.log(data);
-//   //   return data;
-//   // }
-
-//   const searchParams = useSearchParams();
-//   const pathname = usePathname();
-//   // eslint-disable-next-line react-hooks/exhaustive-deps
-//   const createPageURL = (_searchString: string, filterTag: string) => {
-//     const params = new URLSearchParams(searchParams);
-//     params.set('search', _searchString);
-//     params.set('filter', filterTag);
-//     return `${pathname}?${params.toString()}`;
-//   };
-//   // const getUrlParamsValue = (key: string) => {
-//   //   const params = new URLSearchParams(searchParams);
-//   //   return params.get(key) ?? '';
-//   // };
-
-//   const methods = useForm({
-//     resolver: zodResolver(
-//       z.object({
-//         searchQuery: z.string(),
-//       }),
-//     ),
-//     defaultValues: {
-//       searchQuery: '',
-//     },
-//   });
-//   const { handleSubmit, setValue } = methods;
-//   const formSubmit = (searchQuery: { searchQuery: string }) => {
-//     setSearchString(searchQuery.searchQuery);
-//   };
-
-//   const [isLoading, setLoading] = useState(true);
-//   const fetchData = useCallback(
-//     async (
-//       start: number,
-//       limit: number,
-//       _searchString: string,
-//       _selectedTag: string,
-//     ) => {
-//       setLoading(true);
-//       try {
-//         const token = process.env.API_TOKEN; // add TOKEN
-//         const path = `/articles`;
-//         const filters = _selectedTag
-//           ? {
-//               title: { $containsi: _searchString },
-//               tags: { name: { $eq: _selectedTag } },
-//             }
-//           : {
-//               title: { $containsi: _searchString },
-//             };
-//         const urlParamsObject = {
-//           sort: { createdAt: 'desc' },
-//           populate: {
-//             cover: { fields: ['url'] },
-//             category: { populate: '*' },
-//             authorsBio: {
-//               populate: '*',
-//             },
-//             tags: { fields: ['name'] },
-//           },
-//           pagination: {
-//             start,
-//             limit,
-//           },
-//           filters,
-//         };
-//         const options = { headers: { Authorization: `Bearer ${token}` } };
-//         const responseData = await FetchLandingPage();
-//         console.log(responseData);
-//         if (start === 0) {
-//           setData(responseData);
-//         } else {
-//           setData((prevData: any[]) => [...prevData, ...responseData]);
-//         }
-//         setMeta(responseData.meta);
-//       } catch (error) {
-//         // eslint-disable-next-line no-console
-//         console.error(error);
-//       } finally {
-//         setLoading(false);
-//       }
-//       console.log(' ');
-//     },
-//     [],
-//   );
-
-//   function loadMorePosts(): void {
-//     // const nextPosts = meta!.pagination.start + meta!.pagination.limit;
-//     // fetchData(
-//     //   nextPosts,
-//     //   Number(process.env.NEXT_PUBLIC_PAGE_LIMIT),
-//     //   // getUrlParamsValue("search"),
-//     //   // getUrlParamsValue("filter")
-//     //   searchString,
-//     //   selectedTag,
-//     // );
-//   }
-
-//   useEffect(() => {
-//     router.push(createPageURL(searchString, selectedTag));
-//     fetchData(
-//       0,
-//       12,
-//       // getUrlParamsValue("search"),
-//       // getUrlParamsValue("filter")
-//       searchString,
-//       selectedTag,
-//     );
-//   }, [searchString, selectedTag]);
-
-//   if (isLoading) return <Loader />;
-
-//   // const mockMeta: Meta = {
-//   //   pagination: {
-//   //     start: 0,
-//   //     limit: 6,
-//   //     total: 12,
-//   //   },
-//   // };
-
-//   return <Ground />;
-// }
+/* eslint-disable no-console */
 
 'use client';
 
@@ -153,59 +15,9 @@ import {
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-// import bgimg1 from '../assets/bgimg1.png';
-// import bgimg2 from '../assets/bgimg2.jpeg';
 import { Form } from '../component/Form';
 import TopicCard from '../component/TopicCard';
 import type { Post, Tag } from '../interface';
-
-// eslint-disable-next-line unused-imports/no-unused-vars
-// const mockPosts: Post[] = [
-//   {
-//     creator: 'John Doe',
-//     title: 'Lorem Ipsum Dolor Sit Amet',
-//     link: 'https://example.com/post1',
-//     pubDate: '2024-05-20T08:00:00Z',
-//     content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-//     contentSnippet: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-//     categories: ['Tech', 'Programming'],
-//     isoDate: '2024-05-20T08:00:00Z',
-//     coverImg:
-//       'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQfZ5Cl3V0oy7WXC5D4q-DbnJQYTo35hHu9qRosauNr5g&s',
-//     authorImg: profile,
-//     commentCount: 10,
-//   },
-//   {
-//     creator: 'Jane Smith',
-//     title: 'Nulla Facilisi',
-//     link: 'https://example.com/post2',
-//     pubDate: '2024-05-19T08:00:00Z',
-//     content: 'Nulla facilisi. Sed ut ligula eget nisi vehicula sodales.',
-//     contentSnippet: 'Nulla facilisi. Sed ut ligula eget nisi vehicula sodales.',
-//     categories: ['Science', 'Research'],
-//     isoDate: '2024-05-19T08:00:00Z',
-//     coverImg: null,
-//     authorImg: profile,
-//     commentCount: 4,
-//   },
-//   // Repeat similar structures for other posts
-//   {
-//     creator: 'Alice Johnson',
-//     title: 'Vestibulum Ante Ipsum Primis',
-//     link: 'https://example.com/post12',
-//     pubDate: '2024-05-08T08:00:00Z',
-//     content:
-//       'Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae.',
-//     contentSnippet:
-//       'Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae.',
-//     categories: ['Travel', 'Adventure'],
-//     isoDate: '2024-05-08T08:00:00Z',
-//     coverImg:
-//       'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsuaGN1PaTeRiUEc9Vb74XQYruHzIWtn1khha7gmN25Q&s',
-//     authorImg: null,
-//     commentCount: 23,
-//   },
-// ];
 
 function Loader() {
   return (
@@ -309,6 +121,49 @@ export default function Ground() {
   const [isShowAllPosts, setShowAllPosts] = useState(false);
 
   // eslint-disable-next-line react-hooks/rules-of-hooks, consistent-return
+  const FetchBySearch = useCallback(async (searchStringForFetch: string) => {
+    try {
+      const response = await fetch(
+        'https://pantip.com/api/search-service/search/query',
+        {
+          headers: {
+            accept: 'application/json, text/plain, */*',
+            'accept-language': 'en-US,en;q=0.9,ja;q=0.8',
+            'cache-control': 'no-cache',
+            'content-type': 'application/json;charset=UTF-8',
+            pragma: 'no-cache',
+            priority: 'u=1, i',
+            ptauthorize: 'Basic dGVzdGVyOnRlc3Rlcg==',
+            'sec-ch-ua':
+              '"Chromium";v="124", "Google Chrome";v="124", "Not-A.Brand";v="99"',
+            'sec-ch-ua-mobile': '?1',
+            'sec-ch-ua-platform': '"Android"',
+            'sec-fetch-dest': 'empty',
+            'sec-fetch-mode': 'cors',
+            'sec-fetch-site': 'same-origin',
+            cookie:
+              'pantip_visitc=sdwhabqACrALls69t; _gid=GA1.2.626793181.1716403335; ka_iid=UR86RgWwFKXWS2rUX7Ev3Q; iUUID=d6d366011c97026b544a9d89dc16a477; PHPSESSID=8pej0d2cocp9phsqn50imk5m76; rlr=42729481; pantip_sessions=UvJUj9NIo02DG41aNupG5gbzViY58LliFc4xV5B94stX6iYPngTXxv2s554xoG6LmjcrftrQSthNVeHxVJLXsTxhAoRYgIMAM%2F8ngvB8%2Fnpus%2BosWVLwxnnaBS%2BMJl%2Bz2WOsnZMSbn%2FAv7JzHHspLPKr1pHlX%2BocHHli2lyqZOr3QP%2B%2FWKy%2Bi7QtFDs4jYxzy9ECAVwUvsiwCGbtJ3RPYQsm2NNfjTkhGc36lJQGylYPY4w2SpptsAopzJk3m9VOINL4eFzBxGb2qV%2BeLze6IxPR79PbMfAFbldry%2FFqZh48%2B0mMQKXbAhR9HRZQKGVY8SJRgWNytrX%2BrClAj9k0Uw%3D%3D; cto_bundle=34cm9F9lZXpJcCUyRlRSRHhlayUyQllyRWgwREhSWWwyZVJwdzNQTm5TcDlGYjRDYm13WTRvcCUyQmZhVWdDa1JEYjVqeVhyaVo0R3lPbEh0THdSTWJxcDNIJTJGN1NnMSUyRjZaY1NHT2c4S01iUHZncUJLeDhZb3FITGVMdzdpVmc0OWtPdFJBakFXWkdEUlB5cXVpM3M1SkNTclhjdVN4V0xBJTNEJTNE; freq.5f73e63e47e7040e00000000=1; innity.dmp.cks.innity=1; __gsas=ID=ed2a033e9bb0a9f6:T=1716515323:RT=1716515323:S=ALNI_MaTexi3EvLBuPaPPKbRlpxy5u4BaQ; innity.dmp.254.sess.id=27388905.254.1716517517709; ka_sid=XnXJQ1aSnunNi18sVs49bs; innity.dmp.254.sess=4.1716517517709.1716517837167.1716518031228; _dc_gtm_UA-10478864-2=1; _ga=GA1.1.2050989694.1716403335; _ga_ZMC2WGXL4Z=GS1.1.1716517644.8.1.1716518043.48.0.0',
+            Referer: `https://pantip.com/search?q=${encodeURIComponent(searchStringForFetch)}`,
+            'Referrer-Policy': 'strict-origin-when-cross-origin',
+          },
+          body: `{"keyword":"${searchStringForFetch}","limit":8,"type":"all","show_btn_search":"false"}`,
+          method: 'POST',
+        },
+      );
+      const result = await response.json();
+      const { data } = result;
+      const post = data.map((item: any) => ({
+        name: item.title,
+        slug: item.slug,
+      }));
+      return post;
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('Inner fetch error (fetch by search): ', error);
+    }
+  }, []);
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks, consistent-return
   const FetchByFilter = useCallback(async (tag: Tag) => {
     // eslint-disable-next-line unused-imports/no-unused-vars, @typescript-eslint/no-shadow
     const tagName = tag.name;
@@ -367,7 +222,7 @@ export default function Ground() {
       return post;
     } catch (error) {
       // eslint-disable-next-line no-console
-      console.error('Error fetching or parsing the RSS feed:', error);
+      console.error('Inner fetch error (fetch by filter): ', error);
     }
   }, []);
 
@@ -379,6 +234,28 @@ export default function Ground() {
       _selectedTag: Tag,
     ) => {
       setLoading(true);
+      async function createTags(
+        __searchString: any,
+        __selectedTag: any,
+        _data: any,
+      ) {
+        if (_searchString !== '') {
+          try {
+            const result = await FetchBySearch(_searchString);
+            return result;
+          } catch (error) {
+            console.error('Error fetching posts by search:', error);
+            return []; // Return an empty array or handle the error as needed
+          }
+        } else if (_selectedTag.name === '' && _selectedTag.slug === '') {
+          return _data.map((item: any) => ({
+            name: item.name,
+            slug: item.slug,
+          }));
+        } else {
+          return [_selectedTag];
+        }
+      }
       try {
         // eslint-disable-next-line no-console
         console.log('Get data from local server');
@@ -406,18 +283,11 @@ export default function Ground() {
             method: 'GET',
           },
         );
-        // eslint-disable-next-line no-console
         console.log('Finished fetch');
         const result = await response.json();
         const { data } = result;
-        const tags =
-          _selectedTag.name === '' && _selectedTag.slug === ''
-            ? data.map((item: any) => ({ name: item.name, slug: item.slug }))
-            : [_selectedTag];
-        // const tags = data.map((item: any) => ({
-        //   name: item.name,
-        //   slug: item.slug,
-        // }));
+        const tags = await createTags(_searchString, _selectedTag, data);
+        console.log(tags);
         const postPromises = tags.map((tag: Tag) => FetchByFilter(tag));
 
         const resolvedPosts = await Promise.all(postPromises);
@@ -431,7 +301,7 @@ export default function Ground() {
         setLoading(false);
       }
     },
-    [FetchByFilter],
+    [FetchByFilter, FetchBySearch],
   );
 
   useEffect(() => {
@@ -444,15 +314,9 @@ export default function Ground() {
   useEffect(() => {
     // createPageURL(searchString, selectedTag.slug);
     FetchLandingPage(setPosts, searchString, selectedTag);
-    // const iData = FetchByFilter({
-    //   name: 'วันพีซ One piece',
-    //   slug: 'วันพีซ_One_piece',
-    // });
-    // setPosts(iData);
   }, [FetchLandingPage, FetchByFilter, router, searchString, selectedTag]);
 
   useEffect(() => {
-    // eslint-disable-next-line no-console
     console.log(posts);
   }, [posts]);
 

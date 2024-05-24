@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /* eslint-disable unused-imports/no-unused-vars */
 
 'use client';
@@ -39,12 +40,11 @@ export default function TopicCard({
   useEffect(() => {
     const filteredData = data.filter(
       (post: Post) =>
-        (selectedTag.slug !== '' &&
+        post &&
+        ((selectedTag.slug !== '' &&
           post.tags?.some((tag) => tag.slug === selectedTag.slug)) ||
-        (searchString !== '' &&
-          (post.title?.includes(searchString) ||
-            post.content?.includes(searchString))) ||
-        (selectedTag.slug === '' && searchString === ''),
+          searchString !== '' ||
+          (selectedTag.slug === '' && searchString === '')),
     );
 
     if (isShowAllPost) {
@@ -55,19 +55,13 @@ export default function TopicCard({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchString, selectedTag, isShowAllPost, data]);
 
-  useEffect(() => {
-    // eslint-disable-next-line no-console
-    console.log(
-      `isShowAllPost: ${isShowAllPost} \n searchString: ${searchString} \n selectedTag: ${selectedTag.name}`,
-    );
-    // eslint-disable-next-line no-console
-    console.log(dataShow);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dataShow]);
-
   // useEffect(() => {
-  //   console.log(selectedTag);
-  // }, [selectedTag]);
+  //   console.log(
+  //     `isShowAllPost: ${isShowAllPost} \n searchString: ${searchString} \n selectedTag: ${selectedTag.name}`,
+  //   );
+  //   console.log(dataShow);
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [dataShow]);
 
   return (
     <div className="flex w-full flex-col items-center overflow-y-auto">
@@ -76,16 +70,15 @@ export default function TopicCard({
         {dataShow && dataShow.length !== 0 ? (
           dataShow.map((post: Post) => {
             const imageUrl =
-              post.coverImg ??
+              post?.coverImg ??
               'https://images.rawpixel.com/image_800/czNmcy1wcml2YXRlL3Jhd3BpeGVsX2ltYWdlcy93ZWJzaXRlX2NvbnRlbnQvbHIvdjU0NmJhdGNoMy1teW50LTM0LWJhZGdld2F0ZXJjb2xvcl8xLmpwZw.jpg';
-            const avatarUrl = post.authorImg;
-            const liststr = post.tags;
-            return (selectedTag.slug !== '' &&
-              post.tags?.some((tag) => tag.slug === selectedTag.slug)) ||
-              (searchString !== '' &&
-                (post.title?.includes(searchString) ||
-                  post.content?.includes(searchString))) ||
-              (selectedTag.slug === '' && searchString === '') ? (
+            const avatarUrl = post?.authorImg;
+            const liststr = post?.tags;
+            return post &&
+              ((selectedTag.slug !== '' &&
+                post.tags?.some((tag) => tag.slug === selectedTag.slug)) ||
+                searchString !== '' ||
+                (selectedTag.slug === '' && searchString === '')) ? (
               <Link
                 className="flex size-fit"
                 href={post.link ?? '/'}
