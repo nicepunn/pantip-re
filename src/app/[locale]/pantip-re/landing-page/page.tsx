@@ -109,8 +109,8 @@ export default function Ground() {
         </div> */}
       </div>
     ) : (
-      <div className="flex w-full flex-col items-center gap-y-6">
-        <div className="h-fit text-[32px] font-semibold text-black">
+      <div className="flex w-full flex-col items-center">
+        <div className="line-clamp-1 h-fit text-[32px] font-semibold text-black">
           {`#${selectedTag.name}`}
         </div>
       </div>
@@ -324,7 +324,9 @@ export default function Ground() {
   if (isLoading) return <Loader />;
 
   return (
-    <div className="flex h-screen w-full flex-col gap-y-6 px-3 pt-1 md:px-[102px] md:pt-6">
+    <div
+      className={`flex h-screen w-full flex-col px-3 pt-1 md:px-[102px] md:pt-6 ${searchString === '' && selectedTag.name === '' ? 'gap-y-6' : 'gap-y-0'}`}
+    >
       <div
         className="flex w-full flex-col gap-y-1 px-2 md:gap-y-6 md:px-0"
         id="header"
