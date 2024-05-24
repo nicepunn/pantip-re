@@ -261,7 +261,7 @@ export default function Ground() {
           return [tags, limit];
         } else {
           const tags = [_selectedTag];
-          const limit = 192;
+          const limit = 72;
           return [tags, limit];
         }
       }
