@@ -310,7 +310,6 @@ export default function Ground() {
 
   // eslint-disable-next-line react-hooks/rules-of-hooks, consistent-return
   const FetchByFilter = useCallback(async (tag: Tag) => {
-    setLoading(true);
     // eslint-disable-next-line unused-imports/no-unused-vars, @typescript-eslint/no-shadow
     const tagName = tag.name;
     const tagSlug = tag.slug;
@@ -369,8 +368,6 @@ export default function Ground() {
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error('Error fetching or parsing the RSS feed:', error);
-    } finally {
-      setLoading(false);
     }
   }, []);
 
