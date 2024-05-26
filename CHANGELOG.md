@@ -1,3 +1,39 @@
+# 1.0.0 (2024-05-26)
+
+
+### Bug Fixes
+
+* bug button ([60e610b](https://github.com/nicepunn/pantip-re/commit/60e610b383a607ea2b5a4eeb5b8d150313170851))
+* bug in console, clean code ([7a87bc5](https://github.com/nicepunn/pantip-re/commit/7a87bc5db109d511891c374e5b90ee1821387859))
+* bug limit scope ([e9d4672](https://github.com/nicepunn/pantip-re/commit/e9d46723540e3d2d4420af2fd0d2acc233c91b16))
+* bug loading ([427ee9a](https://github.com/nicepunn/pantip-re/commit/427ee9ae9e15ff5493bac354652fbe5bcd613dcc))
+* bug search ([1f4f2ce](https://github.com/nicepunn/pantip-re/commit/1f4f2cef4a692fc1607f0bf8907ae4e7255270b8))
+* bug tag ([c5910e3](https://github.com/nicepunn/pantip-re/commit/c5910e324686cc32f392d752bac4d53c44bc18d3))
+* font ([53f5628](https://github.com/nicepunn/pantip-re/commit/53f5628187db586d1f9c7f117dbae9e09b29bae9))
+* limit scope ([ed534a5](https://github.com/nicepunn/pantip-re/commit/ed534a53e64961b8de7ce08aed9249c4ef525879))
+* search limit ([ebe1346](https://github.com/nicepunn/pantip-re/commit/ebe134640ae600eda16888f1528a3a65b2afa967))
+* ui ([151cadc](https://github.com/nicepunn/pantip-re/commit/151cadcc5e9c9360908301400b71e211dffa758d))
+* ui ([993e2eb](https://github.com/nicepunn/pantip-re/commit/993e2ebbb8c24288099a33c338c36d60b4a1c167))
+* ui ([dcaddda](https://github.com/nicepunn/pantip-re/commit/dcadddac3c175ca2399089612d452b17e56d28b7))
+* ui ([d3c8426](https://github.com/nicepunn/pantip-re/commit/d3c84267851c8a20b66f9500d3102146ef7af7fa))
+* ui ([3b978c5](https://github.com/nicepunn/pantip-re/commit/3b978c59dd8310ec842644cbec1a828f7b1ff905))
+* ui ([f2cf058](https://github.com/nicepunn/pantip-re/commit/f2cf0581a95b3cac811095086302669162097754))
+* ui ([9a16a4c](https://github.com/nicepunn/pantip-re/commit/9a16a4cf97c4dab1a50c6f55408c727ea085be08))
+* ui ([5acfb0a](https://github.com/nicepunn/pantip-re/commit/5acfb0ae09f604f8ac863fe7d48fda2942618758))
+* ui ([ba8e686](https://github.com/nicepunn/pantip-re/commit/ba8e686f21cb916c4621e12a68a53554c419ff30))
+
+
+### Features
+
+* a lot ([cf56fb8](https://github.com/nicepunn/pantip-re/commit/cf56fb80da4c940f7b55cea9bf1f58bf30d5e968))
+* build ([6614daa](https://github.com/nicepunn/pantip-re/commit/6614daab67ea32a59144b33d13f5da3dc344b0b0))
+* day 2 ([452eb04](https://github.com/nicepunn/pantip-re/commit/452eb045fbec136843941f62bd289abac3948874))
+* day 3 ([3f1d1ab](https://github.com/nicepunn/pantip-re/commit/3f1d1ab8b1d0be02094e86f9368049bceecfcaef))
+* day 3 ([e8fe4d2](https://github.com/nicepunn/pantip-re/commit/e8fe4d2b91dcda8ae218c6121e7e22456d3f2ee1))
+* day 3 ([c1c1e74](https://github.com/nicepunn/pantip-re/commit/c1c1e74a5e92a98133ce59c67bae0c3b6b03eb27))
+* day 3 ([42af9a7](https://github.com/nicepunn/pantip-re/commit/42af9a72beb5fd2c43177a9539af6f095d487803))
+* day 4 ([b3f92ad](https://github.com/nicepunn/pantip-re/commit/b3f92ad26b2fab685a5ca58c839dcf5fa47d66ae))
+
 # [3.50.0](https://github.com/ixartz/Next-js-Boilerplate/compare/v3.49.0...v3.50.0) (2024-05-18)
 
 
