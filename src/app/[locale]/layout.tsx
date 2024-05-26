@@ -2,9 +2,10 @@ import '@/styles/global.css';
 
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { NextIntlClientProvider, useMessages } from 'next-intl';
 
 import { AppConfig } from '@/utils/AppConfig';
+
+import ReduxProvider from './redux/ReduxProvider';
 
 export const metadata: Metadata = {
   icons: [
@@ -39,17 +40,17 @@ export default function RootLayout(props: {
   if (!AppConfig.locales.includes(props.params.locale)) notFound();
 
   // Using internationalization in Client Components
-  const messages = useMessages();
+  // const messages = useMessages();
 
   return (
     <html lang={props.params.locale}>
       <body>
-        <NextIntlClientProvider
+        {/* <NextIntlClientProvider
           locale={props.params.locale}
           messages={messages}
-        >
-          {props.children}
-        </NextIntlClientProvider>
+        > */}
+        <ReduxProvider>{props.children}</ReduxProvider>
+        {/* </NextIntlClientProvider> */}
       </body>
     </html>
   );

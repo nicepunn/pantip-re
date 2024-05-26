@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable consistent-return */
 /* eslint-disable @typescript-eslint/no-shadow */
 /* eslint-disable no-console */
@@ -5,7 +6,7 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import {
   type Dispatch,
   type SetStateAction,
@@ -48,25 +49,36 @@ function Loader() {
 
 export default function Ground() {
   const router = useRouter();
-  const [searchString, setSearchString] = useState('');
-  const [posts, setPosts] = useState<any[]>([]);
-  const [selectedTag, setSelectedTag] = useState<Tag>({ name: '', slug: '' });
-  const [searchValueShow, setSearchValueShow] = useState('');
-  // const [meta, setMeta] = useState<Meta | undefined | null>();
-  const [isLoading, setLoading] = useState(true);
 
-  // const searchParams = useSearchParams();
-  // const pathname = usePathname();
-  // const createPageURL = (_searchString: string, filterTag: string) => {
-  //   const params = new URLSearchParams(searchParams);
-  //   params.set('search', _searchString);
-  //   params.set('filter', filterTag);
-  //   return `${pathname}?${params.toString()}`;
-  // };
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const createPageURL = (_searchString: string, filterTag: string) => {
+    const params = new URLSearchParams(searchParams);
+    params.set('search', _searchString);
+    params.set('filter', filterTag);
+    return `${pathname}?${params.toString()}`;
+  };
   // const getUrlParamsValue = (key: string) => {
   //   const params = new URLSearchParams(searchParams);
   //   return params.get(key) ?? '';
   // };
+  const [searchString, setSearchString] = useState('');
+  const [posts, setPosts] = useState<any[]>([]);
+  const [selectedTag, setSelectedTag] = useState<Tag>({
+    name: '',
+    slug: '',
+  });
+  const [searchValueShow, setSearchValueShow] = useState('');
+  // const [selectedTag, setSelectedTag] = useState<Tag>({
+  //   name: '',
+  //   slug: getUrlParamsValue('filter'),
+  // });
+  // const [searchValueShow, setSearchValueShow] = useState(
+  //   getUrlParamsValue('search'),
+  // );
+  // const [meta, setMeta] = useState<Meta | undefined | null>();
+  const [isLoading, setLoading] = useState(true);
+
   const methods = useForm({
     resolver: zodResolver(
       z.object({
@@ -80,6 +92,7 @@ export default function Ground() {
   const { handleSubmit, setValue } = methods;
   const formSubmit = (searchQuery: { searchQuery: string }) => {
     setSearchString(searchQuery.searchQuery);
+    // router.push(createPageURL(searchQuery.searchQuery, selectedTag.slug));
   };
 
   // eslint-disable-next-line react/no-unstable-nested-components
@@ -209,8 +222,8 @@ export default function Ground() {
             ? `https://pantip.com/topic/${item.topic_id}`
             : null,
           pubDate: item?.created_time || null,
-          content: null, // Assuming content is not provided in raw data
-          contentSnippet: null, // Assuming contentSnippet is not provided in raw data
+          content: null,
+          contentSnippet: null,
           tags: item?.tags
             ? item.tags.map((tagg: any) => ({
                 name: tagg.name,
@@ -238,13 +251,17 @@ export default function Ground() {
       _selectedTag: Tag,
     ) => {
       setLoading(true);
+      // router.push(createPageURL(_searchString, _selectedTag.slug));
+      // const ssearchString = getUrlParamsValue('search');
       async function createTags(
         __searchString: any,
         __selectedTag: any,
         _data: any,
       ) {
+        // if (ssearchString !== '') {
         if (_searchString !== '') {
           try {
+            // const tags = await FetchBySearch(ssearchString);
             const tags = await FetchBySearch(_searchString);
             const limit = 24;
             return [tags, limit];
@@ -294,6 +311,7 @@ export default function Ground() {
         console.log('Finished fetch');
         const result = await response.json();
         const { data } = result;
+        // const rawTags = await createTags(ssearchString, _selectedTag, data);
         const rawTags = await createTags(_searchString, _selectedTag, data);
         console.log(rawTags[0]);
         const postPromises = rawTags[0].map((tag: Tag) =>
@@ -320,7 +338,7 @@ export default function Ground() {
   }, [searchString, selectedTag]);
 
   useEffect(() => {
-    // createPageURL(searchString, selectedTag.slug);
+    router.push(createPageURL(searchString, selectedTag.slug));
     FetchLandingPage(setPosts, searchString, selectedTag);
   }, [FetchLandingPage, FetchByFilter, router, searchString, selectedTag]);
 

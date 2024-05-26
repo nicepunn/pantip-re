@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import type { Dispatch, SetStateAction } from 'react';
 import Parser from 'rss-parser';
 
@@ -15,9 +16,9 @@ export const FetchLandingPage = async (
 ): Promise<void> => {
   const posts: Post[] = [];
   try {
-    // console.log('Fetching landing page post');
+    console.log('Fetching landing page post');
     const feed = await parser.parseURL('https://pantip.com/forum/feed');
-    // console.log('Fetching finished');
+    console.log('Fetching finished');
     feed.items.forEach((item: FeedItem) => {
       const post: Post = {
         creator: item.creator,
@@ -35,7 +36,6 @@ export const FetchLandingPage = async (
       posts.push(post);
     });
   } catch (error) {
-    // eslint-disable-next-line no-console
     console.error('Error fetching or parsing the RSS feed:', error);
   }
   const allPosts: AllPosts = { posts, meta: null };
