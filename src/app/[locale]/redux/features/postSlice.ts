@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createSlice } from '@reduxjs/toolkit';
 
@@ -34,6 +35,7 @@ export const postSlice = createSlice({
     },
     removeAllPost: (_state, _action: PayloadAction) => {
       console.log('remove all post');
+      // eslint-disable-next-line no-param-reassign
       _state.postItems = [];
     },
   },
